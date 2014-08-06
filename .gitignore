@@ -8,6 +8,6 @@
 *.res
 *.lib
 *.bin
-*\*\Binaries\*.*
-*\*\Intermediate\*.*
-*\*\Saved\*.*
+**/Binaries/**
+**/Intermediate/**
+**/Saved/**
