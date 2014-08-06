@@ -1,0 +1,38 @@
+
+* Read Git Book
+
+	http://git-scm.com/book
+
+* Git Client I'm using on Win7 64
+
+	http://git-scm.com/download/win
+
+	Version used (Aug 06, 2014)
+	https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140611/Git-1.9.4-preview20140611.exe
+
+* Git GUI 
+
+	GitHub for Windows
+
+	http://windows.github.com/
+	
+	Downloaded from (version 2.0 at Aug 06, 2014)
+	
+	https://github-windows.s3.amazonaws.com/GitHubSetup.exe
+	
+* Tips
+
+- are you behind an http proxy ?
+
+		http://stackoverflow.com/questions/783811/getting-git-to-work-with-a-proxy-server
+		
+		edit .gitconfig (in the root of your profile, which may hide both in C:\Documents and Settings and on some network drive) and add this:
+		
+	[http]
+		proxy = http://username:password@proxy.at.your.org:8080
+	
+	[https]
+		proxy = http://username:password@proxy.at.your.org:8080
+		
+		
+		

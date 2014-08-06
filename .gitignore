@@ -1,11 +1,13 @@
-sandbox/hleoni_CTP/Saved/Logs/hleoni_CTP.log
+*.log
 *.suo
 *.sdf
 *.opensdf
-sandbox/hleoni_CTP/Binaries/Win64/UE4Editor-hleoni_CTP-4156.pdb
 *.dll
 *.pdb
 *.obj
 *.res
 *.lib
 *.bin
+*\*\Binaries\*.*
+*\*\Intermediate\*.*
+*\*\Saved\*.*
