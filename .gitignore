@@ -9,6 +9,8 @@
 *.lib
 *.bin
 *.exe
+*.a
+*.o
 **/Binaries/**
 **/Intermediate/**
 **/Saved/**
