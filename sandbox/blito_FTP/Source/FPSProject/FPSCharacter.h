@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "FPSWeapon.h"
 #include "FPSCharacter.generated.h"
 
 /**
@@ -22,11 +23,7 @@ class FPSPROJECT_API AFPSCharacter : public ACharacter
 	//clears jump flag when key is released
 	UFUNCTION()
 	void OnStopJump();
-
-	//handles firing
-	UFUNCTION()
-	void OnFire();
-
+	
 	//handles first<->third person camera
 	void OnCameraToggle();
 
@@ -37,14 +34,14 @@ class FPSPROJECT_API AFPSCharacter : public ACharacter
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	TSubobjectPtr<USkeletalMeshComponent> FirstPersonMesh;
-
-	/** Gun muzzle's offset from the camera location */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	FVector MuzzleOffset;
-
+	
 	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
 	TSubclassOf<class AFPSProjectile> ProjectileClass;
+
+	/** Weapon held by the character */
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	AFPSWeapon * Weapon;
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
