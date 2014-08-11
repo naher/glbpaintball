@@ -12,5 +12,9 @@
 *.a
 *.o
 **/Binaries/**
-**/Intermediate/**
+**/Intermediate/ProjectFiles/obj
+**/Intermediate/ProjectFiles/*
+!**/Intermediate/ProjectFiles/*.vcxproj
+**/Intermediate/Build
+**/Intermediate/
 **/Saved/**
