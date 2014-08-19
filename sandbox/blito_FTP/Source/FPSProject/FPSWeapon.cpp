@@ -1,6 +1,7 @@
 
 
 #include "FPSProject.h"
+#include "FPSCharacter.h"
 #include "FPSWeapon.h"
 
 
@@ -10,11 +11,12 @@ AFPSWeapon::AFPSWeapon(const class FPostConstructInitializeProperties& PCIP)
 	Ammo = 10;
 	CurrentState = EWeaponState::Idle;
 	WeaponMesh = PCIP.CreateDefaultSubobject<USkeletalMeshComponent>(this, TEXT("FirstPersonMesh"));
+	WeaponMesh->SetHiddenInGame(true);
 }
 
 void AFPSWeapon::OnTriggerPress()
 {
-	if (Ammo)
+	if (Ammo > 0)
 	{
 		Fire();
 		
@@ -35,6 +37,23 @@ void AFPSWeapon::OnTriggerRelease()
 	CurrentState = EWeaponState::Idle;
 }
 
+void AFPSWeapon::OnEquip(AFPSCharacter * WeaponOwner)
+{
+	FName AttachPoint = WeaponOwner->GetWeaponAttachPoint();
+	USkeletalMeshComponent * FirstPersonMesh = WeaponOwner->GetSpecificPawnMesh(true);
+
+	WeaponMesh->AttachTo(FirstPersonMesh, AttachPoint, EAttachLocation::SnapToTarget);
+	WeaponMesh->SetHiddenInGame(false);
+	Instigator = WeaponOwner;
+	WeaponHolder = WeaponOwner;
+}
+
+void AFPSWeapon::OnUnEquip()
+{
+	WeaponMesh->DetachFromParent();
+	WeaponMesh->SetHiddenInGame(true);
+}
+
 void AFPSWeapon::Fire()
 {
 	// try and fire a projectile
@@ -43,7 +62,7 @@ void AFPSWeapon::Fire()
 		// Get the camera transform
 		FVector CameraLoc;
 		FRotator CameraRot;
-		GetActorEyesViewPoint(CameraLoc, CameraRot);
+		WeaponHolder->GetActorEyesViewPoint(CameraLoc, CameraRot);
 		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the camera to find the final muzzle position
 		FVector const MuzzleLocation = CameraLoc + FTransform(CameraRot).TransformVector(MuzzleOffset);
 		FRotator MuzzleRotation = CameraRot;

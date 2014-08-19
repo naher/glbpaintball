@@ -29,7 +29,7 @@ AFPSCharacter::AFPSCharacter(const class FPostConstructInitializeProperties& PCI
 	// everyone but the owner can see the regular body mesh
 	Mesh->SetOwnerNoSee(true);
 
-	Weapon = nullptr;
+	ActiveWeapon = nullptr;
 }
 
 void AFPSCharacter::BeginPlay()
@@ -37,6 +37,15 @@ void AFPSCharacter::BeginPlay()
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Using FPSCharacter"));
+	}
+
+	for (auto WeaponClass : DefaultInventoryClasses)
+	{
+		// Create new weapon and equip it
+		FActorSpawnParameters SpawnInfo;
+		SpawnInfo.bNoCollisionFail = true;
+		AFPSWeapon* NewWeapon = GetWorld()->SpawnActor<AFPSWeapon>(WeaponClass, SpawnInfo);
+		Inventory.Add(NewWeapon);
 	}
 }
 
@@ -50,12 +59,8 @@ void AFPSCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompon
 	InputComponent->BindAction("Jump", IE_Pressed, this, &AFPSCharacter::OnStartJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &AFPSCharacter::OnStopJump);
 	InputComponent->BindAction("Change_Camera", IE_Pressed, this, &AFPSCharacter::OnCameraToggle);
-
-	if (Weapon)
-	{
-		InputComponent->BindAction("Fire", IE_Pressed, (AFPSWeapon*) (Weapon->GetActorClass()), &AFPSWeapon::OnTriggerPress);
-		InputComponent->BindAction("Fire", IE_Released, (AFPSWeapon*)(Weapon->GetActorClass()), &AFPSWeapon::OnTriggerRelease);
-	}
+	InputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::OnFireStart);
+	InputComponent->BindAction("Fire", IE_Released, this, &AFPSCharacter::OnFireEnd);
 }
 
 void AFPSCharacter::MoveForward(float Value)
@@ -97,6 +102,22 @@ void AFPSCharacter::OnStopJump()
 	bPressedJump = false;
 }
 
+void AFPSCharacter::OnFireStart()
+{
+	if (ActiveWeapon)
+	{
+		ActiveWeapon->OnTriggerPress();
+	}
+}
+
+void AFPSCharacter::OnFireEnd()
+{
+	if (ActiveWeapon)
+	{
+		ActiveWeapon->OnTriggerRelease();
+	}
+}
+
 void AFPSCharacter::OnCameraToggle()
 {
 	// Set the new position of the camera
@@ -121,5 +142,40 @@ void AFPSCharacter::OnCameraToggle()
 		// everyone can see the regular body mesh
 		FirstPersonMesh->SetOwnerNoSee(true);
 		Mesh->SetOwnerNoSee(false);
+	}
+}
+
+FName AFPSCharacter::GetWeaponAttachPoint() const
+{
+	return WeaponAttachPoint;
+}
+
+USkeletalMeshComponent* AFPSCharacter::GetSpecificPawnMesh(bool WantFirstPerson) const
+{
+	return FirstPersonMesh.Get();
+}
+
+void AFPSCharacter::EquipWeapon(AFPSWeapon * Weapon)
+{
+	if (!Weapon)
+		return;
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Weapon equipped."));
+	}
+
+	UnEquipWeapon();
+	ActiveWeapon = Weapon;
+	ActiveWeapon->OnEquip(this);
+
+}
+
+void AFPSCharacter::UnEquipWeapon()
+{
+	if (ActiveWeapon)
+	{
+		ActiveWeapon->OnUnEquip();
+		ActiveWeapon = nullptr;
 	}
 }

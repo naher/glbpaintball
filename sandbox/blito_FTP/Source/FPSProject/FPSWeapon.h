@@ -17,6 +17,21 @@ class FPSPROJECT_API AFPSWeapon : public AActor
 	//** Current state of our weapon */
 	enum EWeaponState { Idle, Firing };
 
+	UFUNCTION()
+	virtual void OnTriggerPress();
+
+	UFUNCTION()
+	virtual void OnTriggerRelease();
+
+	UFUNCTION()
+	virtual void OnEquip(class AFPSCharacter * WeaponOwner);
+
+	UFUNCTION()
+	virtual void OnUnEquip();
+
+protected:
+	virtual void Fire();
+
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	TSubobjectPtr<USkeletalMeshComponent> WeaponMesh;
@@ -37,18 +52,10 @@ class FPSPROJECT_API AFPSWeapon : public AActor
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	float Ammo;
 
-	UFUNCTION()
-	virtual void OnTriggerPress();
-
-	UFUNCTION()
-	virtual void OnTriggerRelease();
-
-protected:
-	virtual void Fire();
+	AFPSCharacter * WeaponHolder;
 
 	
 private:
-
 	EWeaponState CurrentState;
 
 };
