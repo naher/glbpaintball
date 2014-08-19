@@ -8,19 +8,13 @@ AFPSMovableObjective::AFPSMovableObjective(const class FPostConstructInitializeP
 	: Super(PCIP)
 {
 	CurrentTravelTime = 0;
-	iLastTargetPoint = 0;
-	iNextTargetPoint = 0;
-	bIsMovingForward = true;
 
 	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AFPSMovableObjective::BeginPlay()
 {
-	if (TargetPoints.Num() > 1)
-	{
-		SetNextTarget();
-	}
+	SetNextTarget();
 }
 
 void AFPSMovableObjective::Tick(float DeltaSeconds)
@@ -31,13 +25,12 @@ void AFPSMovableObjective::Tick(float DeltaSeconds)
 
 	float alpha = CurrentTravelTime / TotalTravelTime;
 
-	FVector newPos = FMath::Lerp(TargetPoints[iLastTargetPoint]->GetActorLocation(),
-								 TargetPoints[iNextTargetPoint]->GetActorLocation(), alpha);
+	FVector newPos = FMath::Lerp(vLastPointLocation,
+								 vNextPointLocation, alpha);
 
 	if (CurrentTravelTime >= TotalTravelTime)
 	{
 		SetNextTarget();
-		//bIsMovingForward = !bIsMovingForward;
 	}
 
 	SetActorLocation(newPos);
@@ -45,18 +38,22 @@ void AFPSMovableObjective::Tick(float DeltaSeconds)
 
 void AFPSMovableObjective::SetNextTarget()
 {
-	// We arrived to our old NextTargetPoint
-	iLastTargetPoint = iNextTargetPoint;
-
-	// find next target point
-	iNextTargetPoint = (iLastTargetPoint + 1 < TargetPoints.Num()) ? iLastTargetPoint + 1 : 0;
-
 	// Set current travel time to 0
 	CurrentTravelTime = 0;
-	
+
+	// Update point locations for path calculation
+	vLastPointLocation = vNextPointLocation;
+	vNextPointLocation = GetNextPointLocation();
+
 	// Travel length = distance between current target and next target
-	TravelLength = FVector::Dist(TargetPoints[iLastTargetPoint]->GetActorLocation(),
-								TargetPoints[iNextTargetPoint]->GetActorLocation());
+	TravelLength = FVector::Dist(vLastPointLocation,
+		vNextPointLocation);
 
 	TotalTravelTime = TravelLength / PixelsPerSecond;
+
+}
+
+FVector AFPSMovableObjective::GetNextPointLocation()
+{
+	return FVector(0, 0, 0);
 }

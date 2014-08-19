@@ -13,29 +13,22 @@ class FPSPROJECT_API AFPSMovableObjective : public AFPSObjective
 {
 	GENERATED_UCLASS_BODY()
 
-	/** List of points to cycle through */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Objective)
-	TArray<ATargetPoint*> TargetPoints;
-	
-	/** Speed */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Objective)
-	float PixelsPerSecond;
-
 	UFUNCTION()
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
 
-private:
+protected:
 
 	/** Sets the next target point to go to */
-	void SetNextTarget();
+	virtual void SetNextTarget();
 
-	// Target Points of interest
-	int iLastTargetPoint, iNextTargetPoint;
+	/** Retrieves the next location to go to */
+	virtual FVector GetNextPointLocation();
 
-	// true: start->end, false: start<-end
-	bool bIsMovingForward;
+	/** Speed */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+	float PixelsPerSecond;
 
 	// Time transcurred in current travel
 	float CurrentTravelTime;
@@ -45,5 +38,8 @@ private:
 
 	// Travel Length in Pixels
 	float TravelLength;
+
+	// Last point visited and next point to visit
+	FVector vLastPointLocation, vNextPointLocation;
 
 };
