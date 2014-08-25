@@ -18,8 +18,3 @@ AFPSObjective::AFPSObjective(const class FPostConstructInitializeProperties& PCI
 	// Attach static mesh component to root component
 	ObjectiveMesh->AttachTo(RootComponent);
 }
-
-void AFPSObjective::OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-
-}

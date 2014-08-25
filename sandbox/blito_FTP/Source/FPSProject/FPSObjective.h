@@ -8,10 +8,12 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class FPSPROJECT_API AFPSObjective : public AActor
 {
 	GENERATED_UCLASS_BODY()
+	
+protected:
 
 	// Collision component to be used as root component
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Objective)
@@ -21,9 +23,8 @@ class FPSPROJECT_API AFPSObjective : public AActor
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Objective)
 	TSubobjectPtr<UStaticMeshComponent> ObjectiveMesh;
 
-protected:
 	/** called when projectile hits something */
-	UFUNCTION()
+	UFUNCTION(BlueprintImplementableEvent, Category = Objective)
 	virtual void OnHit(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 	
 };
