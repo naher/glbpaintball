@@ -55,6 +55,11 @@ void APBWeapon::OnUnEquip()
 	WeaponMesh->SetHiddenInGame(true);
 }
 
+void APBWeapon::AddAmmo(int32 AmmoInc)
+{
+	Ammo += AmmoInc;
+}
+
 void APBWeapon::Fire()
 {
 	// try and fire a projectile

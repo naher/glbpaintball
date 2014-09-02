@@ -28,6 +28,9 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 	UFUNCTION()
 	virtual void OnUnEquip();
 
+	UFUNCTION()
+	void AddAmmo(int32 AmmoInc);
+
 protected:
 	virtual void Fire();
 
