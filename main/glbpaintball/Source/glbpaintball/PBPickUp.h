@@ -13,8 +13,8 @@ class GLBPAINTBALL_API APBPickUp : public AActor
 {
 	GENERATED_UCLASS_BODY()
 
-	UFUNCTION(BlueprintCallable, Category = PickUp)
-	virtual void OnPickedUp(class APBCharacter * character) PURE_VIRTUAL(APBPickUp::OnPickedUp,);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = PickUp)
+	void OnPickedUp(class APBCharacter * character);
 
 protected:
 

@@ -5,7 +5,6 @@
 #include "PBWeapon.h"
 #include "PBCharacter.h"
 
-
 APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
@@ -190,4 +189,16 @@ void APBCharacter::UnEquipWeapon()
 		ActiveWeapon->OnUnEquip();
 		ActiveWeapon = nullptr;
 	}
+}
+
+APBWeapon * APBCharacter::GetWeapon(UClass * WeaponClass) const
+{
+	for (auto Weapon : Inventory)
+	{
+		if (Weapon->GetClass() == WeaponClass)
+		{
+			return Weapon;
+		}
+	}
+	return nullptr;
 }

@@ -18,3 +18,5 @@ APBPickUp::APBPickUp(const class FPostConstructInitializeProperties& PCIP)
 	// Attach static mesh component to root component
 	PickUpMesh->AttachTo(RootComponent);
 }
+
+void APBPickUp::OnPickedUp_Implementation(APBCharacter * Character) PURE_VIRTUAL(APBPickUp::OnPickedUp_Implementation, );

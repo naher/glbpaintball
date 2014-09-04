@@ -11,6 +11,7 @@
 UCLASS()
 class GLBPAINTBALL_API APBCharacter : public ACharacter
 {
+
 	GENERATED_UCLASS_BODY()
 
 	virtual void BeginPlay() override;
@@ -50,6 +51,9 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void UnEquipWeapon();
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	APBWeapon * GetWeapon(UClass * WeaponClass) const;
 
 protected:
 	/** First person camera */
