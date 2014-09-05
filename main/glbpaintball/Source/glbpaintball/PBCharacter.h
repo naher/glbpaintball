@@ -33,9 +33,6 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	//handles first<->third person camera
 	void OnCameraToggle();
 
-	UFUNCTION(BlueprintCallable, Category = Weapon)
-	void OnPickUpAmmo(class APBPickup_Ammo * PickUp);
-
 	/** Get weapon attach point from the first person mesh */
 	FName GetWeaponAttachPoint() const;
 

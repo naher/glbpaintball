@@ -1,7 +1,6 @@
 
 
 #include "glbpaintball.h"
-#include "PBPickup_Ammo.h"
 #include "PBWeapon.h"
 #include "PBCharacter.h"
 
@@ -141,18 +140,6 @@ void APBCharacter::OnCameraToggle()
 		// everyone can see the regular body mesh
 		FirstPersonMesh->SetOwnerNoSee(true);
 		Mesh->SetOwnerNoSee(false);
-	}
-}
-
-void APBCharacter::OnPickUpAmmo(APBPickup_Ammo * PickUp)
-{
-	for (auto Weapon : Inventory)
-	{
-		if (PickUp->IsForWeapon(Weapon->GetClass()))
-		{
-			Weapon->AddAmmo(PickUp->GetAmmoLoad());
-			return;
-		}
 	}
 }
 

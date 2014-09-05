@@ -25,5 +25,9 @@ protected:
 	// Static mesh of the pickup
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = PickUp)
 	TSubobjectPtr<UStaticMeshComponent> PickUpMesh;
+
+	/** called upon collision */
+	UFUNCTION()
+	void OnHit(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 	
 };
