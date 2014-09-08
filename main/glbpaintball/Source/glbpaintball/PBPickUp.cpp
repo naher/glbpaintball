@@ -30,5 +30,6 @@ void APBPickUp::OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVecto
 	if (Character)
 	{
 		OnPickedUp(Character);
+		Destroy();
 	}
 }
