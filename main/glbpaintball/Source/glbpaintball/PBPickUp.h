@@ -13,14 +13,11 @@ class GLBPAINTBALL_API APBPickUp : public AActor
 {
 	GENERATED_UCLASS_BODY()
 
+	/** Pure virtual function, OnPickedUp_Implementation needs to be implemented in children classes */
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = PickUp)
-	void OnPickedUp(class APBCharacter * character);
+	bool OnPickedUp(class APBCharacter * character);
 
 protected:
-
-	// Collision component to be used as root component
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = PickUp)
-	TSubobjectPtr<USphereComponent> BaseCollisionComponent;
 
 	// Static mesh of the pickup
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = PickUp)

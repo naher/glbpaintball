@@ -49,6 +49,10 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void UnEquipWeapon();
 
+	/** Adds Weapon to inventory. Returns true if weapon added correctly, false otherwise. */
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	bool AddWeaponToInventory(class APBWeapon * Weapon);
+
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	APBWeapon * GetWeapon(UClass * WeaponClass) const;
 
@@ -68,6 +72,9 @@ protected:
 	/** weapons in inventory */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, Category = Inventory)
 	TArray<class APBWeapon*> Inventory;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Inventory)
+	int32 InventorySize;
 
 	/** Weapon held by the character */
 	UPROPERTY(VisibleAnywhere, Category = Inventory)

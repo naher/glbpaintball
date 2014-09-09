@@ -23,6 +23,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Pickup)
 	UClass * WeaponClass;
 
-	virtual void OnPickedUp_Implementation(APBCharacter * Character) override;
+	virtual bool OnPickedUp_Implementation(APBCharacter * Character) override;
 	
 };

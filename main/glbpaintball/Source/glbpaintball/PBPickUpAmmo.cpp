@@ -12,7 +12,7 @@ APBPickUpAmmo::APBPickUpAmmo(const class FPostConstructInitializeProperties& PCI
 
 }
 
-void APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
+bool APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
 {
 	if (GEngine)
 	{
@@ -23,5 +23,8 @@ void APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
 
 	if (Weapon) {
 		Weapon->AddAmmo(AmmoLoad);
+		return true;
 	}
+	
+	return false;
 }

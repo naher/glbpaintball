@@ -37,13 +37,14 @@ void APBCharacter::BeginPlay()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Using FPSCharacter"));
 	}
 
+	Inventory.AddZeroed(InventorySize);
 	for (auto WeaponClass : DefaultInventoryClasses)
 	{
 		// Create new weapon and equip it
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.bNoCollisionFail = true;
 		APBWeapon* NewWeapon = GetWorld()->SpawnActor<APBWeapon>(WeaponClass, SpawnInfo);
-		Inventory.Add(NewWeapon);
+		Inventory.Insert(NewWeapon, NewWeapon->GetSlotNumber());
 	}
 }
 
@@ -176,6 +177,17 @@ void APBCharacter::UnEquipWeapon()
 		ActiveWeapon->OnUnEquip();
 		ActiveWeapon = nullptr;
 	}
+}
+
+bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
+{
+	if (Weapon && !Inventory[Weapon->GetSlotNumber()])
+	{
+		Inventory.Insert(Weapon, Weapon->GetSlotNumber());
+		return true;
+	}
+
+	return false;
 }
 
 APBWeapon * APBCharacter::GetWeapon(UClass * WeaponClass) const

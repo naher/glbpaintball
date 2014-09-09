@@ -8,28 +8,22 @@
 APBPickUp::APBPickUp(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-	// Create the root component (collision)
-	BaseCollisionComponent = PCIP.CreateDefaultSubobject<USphereComponent>(this, TEXT("BaseSphereComponent"));
-
-	RootComponent = BaseCollisionComponent;
-
 	// Create static mesh
 	PickUpMesh = PCIP.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("PickupMesh"));
 	PickUpMesh->OnComponentHit.AddDynamic(this, &APBPickUp::OnHit);
+	PickUpMesh->BodyInstance.SetCollisionProfileName("PickUp");
 
-	// Attach static mesh component to root component
-	PickUpMesh->AttachTo(RootComponent);
+	RootComponent = PickUpMesh;
 }
 
-void APBPickUp::OnPickedUp_Implementation(APBCharacter * Character) PURE_VIRTUAL(APBPickUp::OnPickedUp_Implementation, );
+bool APBPickUp::OnPickedUp_Implementation(APBCharacter * Character) PURE_VIRTUAL(APBPickUp::OnPickedUp_Implementation, return false;);
 
 void APBPickUp::OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	APBCharacter * Character = Cast<APBCharacter>(OtherActor);
 
-	if (Character)
+	if (Character && OnPickedUp(Character))
 	{
-		OnPickedUp(Character);
 		Destroy();
 	}
 }

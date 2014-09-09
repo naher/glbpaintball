@@ -55,6 +55,11 @@ void APBWeapon::OnUnEquip()
 	WeaponMesh->SetHiddenInGame(true);
 }
 
+int32 APBWeapon::GetSlotNumber() const
+{
+	return SlotNumber;
+}
+
 void APBWeapon::AddAmmo(int32 AmmoInc)
 {
 	Ammo += AmmoInc;

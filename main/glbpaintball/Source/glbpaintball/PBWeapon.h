@@ -28,6 +28,9 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 	UFUNCTION()
 	virtual void OnUnEquip();
 
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	int32 GetSlotNumber() const;
+
 	UFUNCTION()
 	void AddAmmo(int32 AmmoInc);
 
@@ -41,6 +44,10 @@ protected:
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
 	TSubclassOf<class APBProjectile> ProjectileClass;
+
+	/** Key used to equip this weapon */
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+	int32 SlotNumber;
 
 	/** Gun muzzle's offset from the camera location */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
