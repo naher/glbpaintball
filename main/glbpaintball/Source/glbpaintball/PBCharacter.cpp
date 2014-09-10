@@ -181,10 +181,13 @@ void APBCharacter::UnEquipWeapon()
 
 bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
 {
-	if (Weapon && !Inventory[Weapon->GetSlotNumber()])
+	if (Weapon)
 	{
-		Inventory.Insert(Weapon, Weapon->GetSlotNumber());
-		return true;
+		if (Inventory.Num() > Weapon->GetSlotNumber() && !Inventory[Weapon->GetSlotNumber()])
+		{
+			Inventory.Insert(Weapon, Weapon->GetSlotNumber());
+			return true;
+		}
 	}
 
 	return false;
