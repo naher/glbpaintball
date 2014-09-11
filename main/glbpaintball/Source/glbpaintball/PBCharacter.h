@@ -68,18 +68,16 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void UnEquipWeapon();
 
-<<<<<<< HEAD
 	//The player is in movement
 	UFUNCTION()
     bool IsInMovement();
-=======
+
 	/** Adds Weapon to inventory. Returns true if weapon added correctly, false otherwise. */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool AddWeaponToInventory(class APBWeapon * Weapon);
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	APBWeapon * GetWeapon(UClass * WeaponClass) const;
->>>>>>> origin/master
 
 protected:
 
