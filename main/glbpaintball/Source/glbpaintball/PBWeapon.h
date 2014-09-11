@@ -14,7 +14,7 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 	GENERATED_UCLASS_BODY()
 
 	//** Current state of our weapon */
-	enum EWeaponState { Idle, Firing };
+	enum EWeaponState { Idle, Firing, OnCooldown };
 
 	UFUNCTION()
 	virtual void OnTriggerPress();
@@ -37,6 +37,8 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 protected:
 	virtual void Fire();
 
+	inline void SetOffCooldown() { CurrentState = EWeaponState::Idle; }
+
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	TSubobjectPtr<USkeletalMeshComponent> WeaponMesh;
@@ -57,9 +59,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	float FiringSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	float TimeOnCooldown;
+
 	/** Left ammunition */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	float Ammo;
+
+	/** true if this weapon can fire several bullets on a single click */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	bool isAutomatic;
 
 	class APBCharacter * WeaponHolder;
 
