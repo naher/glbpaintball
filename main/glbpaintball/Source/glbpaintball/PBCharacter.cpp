@@ -1,10 +1,8 @@
 
 
 #include "glbpaintball.h"
-#include "PBPickup_Ammo.h"
 #include "PBWeapon.h"
 #include "PBCharacter.h"
-
 
 APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
@@ -45,13 +43,14 @@ void APBCharacter::BeginPlay()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Using FPSCharacter"));
 	}
 
+	Inventory.AddZeroed(InventorySize);
 	for (auto WeaponClass : DefaultInventoryClasses)
 	{
 		// Create new weapon and equip it
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.bNoCollisionFail = true;
 		APBWeapon* NewWeapon = GetWorld()->SpawnActor<APBWeapon>(WeaponClass, SpawnInfo);
-		Inventory.Add(NewWeapon);
+		Inventory.Insert(NewWeapon, NewWeapon->GetSlotNumber());
 	}
 }
 
@@ -151,18 +150,6 @@ void APBCharacter::OnCameraToggle()
 	}
 }
 
-void APBCharacter::OnPickUpAmmo(APBPickup_Ammo * PickUp)
-{
-	for (auto Weapon : Inventory)
-	{
-		if (PickUp->IsForWeapon(Weapon->GetClass()))
-		{
-			Weapon->AddAmmo(PickUp->GetAmmoLoad());
-			return;
-		}
-	}
-}
-
 FName APBCharacter::GetWeaponAttachPoint() const
 {
 	return WeaponAttachPoint;
@@ -198,6 +185,7 @@ void APBCharacter::UnEquipWeapon()
 	}
 }
 
+<<<<<<< HEAD
 void APBCharacter::CollectEnergy()
 {
 
@@ -216,4 +204,30 @@ void APBCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	CharacterMovement->MaxWalkSpeed = SpeedFactor * EnergyLevel + BaseSpeed;
+=======
+bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
+{
+	if (Weapon)
+	{
+		if (Inventory.Num() > Weapon->GetSlotNumber() && !Inventory[Weapon->GetSlotNumber()])
+		{
+			Inventory.Insert(Weapon, Weapon->GetSlotNumber());
+			return true;
+		}
+	}
+
+	return false;
+}
+
+APBWeapon * APBCharacter::GetWeapon(UClass * WeaponClass) const
+{
+	for (auto Weapon : Inventory)
+	{
+		if (Weapon->GetClass() == WeaponClass)
+		{
+			return Weapon;
+		}
+	}
+	return nullptr;
+>>>>>>> origin/master
 }

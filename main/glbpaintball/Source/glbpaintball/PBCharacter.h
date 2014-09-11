@@ -11,6 +11,7 @@
 UCLASS()
 class GLBPAINTBALL_API APBCharacter : public ACharacter
 {
+
 	GENERATED_UCLASS_BODY()
 	
 	/** Energy level */
@@ -51,9 +52,6 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	//handles first<->third person camera
 	void OnCameraToggle();
 
-	UFUNCTION(BlueprintCallable, Category = Weapon)
-	void OnPickUpAmmo(class APBPickup_Ammo * PickUp);
-
 	/** Get weapon attach point from the first person mesh */
 	FName GetWeaponAttachPoint() const;
 
@@ -70,9 +68,18 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void UnEquipWeapon();
 
+<<<<<<< HEAD
 	//The player is in movement
 	UFUNCTION()
     bool IsInMovement();
+=======
+	/** Adds Weapon to inventory. Returns true if weapon added correctly, false otherwise. */
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	bool AddWeaponToInventory(class APBWeapon * Weapon);
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	APBWeapon * GetWeapon(UClass * WeaponClass) const;
+>>>>>>> origin/master
 
 protected:
 
@@ -99,6 +106,9 @@ protected:
 	/** weapons in inventory */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, Category = Inventory)
 	TArray<class APBWeapon*> Inventory;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Inventory)
+	int32 InventorySize;
 
 	/** Weapon held by the character */
 	UPROPERTY(VisibleAnywhere, Category = Inventory)

@@ -13,16 +13,16 @@ class GLBPAINTBALL_API APBPickUpAmmo : public APBPickUp
 {
 	GENERATED_UCLASS_BODY()
 
-	void OnPickedUp(class APBCharacter * character) override;
-
 protected:
 
 	/** how much ammo does it give? */
-	UPROPERTY(EditDefaultsOnly, Category = Pickup)
+	UPROPERTY(EditAnywhere, Category = Pickup)
 	int32 AmmoLoad;
 
 	/** which weapon gets ammo? */
-	UPROPERTY(EditDefaultsOnly, Category = Pickup)
-	UClass * WeaponType;
+	UPROPERTY(EditAnywhere, Category = Pickup)
+	UClass * WeaponClass;
+
+	virtual bool OnPickedUp_Implementation(APBCharacter * Character) override;
 	
 };
