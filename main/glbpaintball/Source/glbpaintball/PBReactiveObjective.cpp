@@ -17,6 +17,8 @@ void APBReactiveObjective::BeginPlay()
 
 void APBReactiveObjective::Tick(float DeltaSeconds)
 {
+  if (PlayerCharacter != NULL && MonitorPoint != NULL)
+  {
 	FVector PlayerToMonitor = MonitorPoint->GetActorLocation() - PlayerCharacter->GetActorLocation();
 
 	// f(MaxDist)=0 = FromPoint.Location
@@ -25,4 +27,5 @@ void APBReactiveObjective::Tick(float DeltaSeconds)
 	FVector NewLocation = FMath::Lerp<FVector, float>(FromPoint->GetActorLocation(), ToPoint->GetActorLocation(), MovementRatio);
 
 	SetActorLocation(NewLocation);
+  }
 }

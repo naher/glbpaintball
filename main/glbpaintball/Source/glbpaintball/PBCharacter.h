@@ -12,6 +12,25 @@ UCLASS()
 class GLBPAINTBALL_API APBCharacter : public ACharacter
 {
 	GENERATED_UCLASS_BODY()
+	
+	/** Energy level */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Energy)
+	float EnergyLevel;
+
+	/** The factor of the Speed */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Energy)
+	float SpeedFactor;
+
+	/** The base Speed */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Energy)
+	float BaseSpeed;
+
+	/** The base health */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Health)
+	float Health;
+	
+
+	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
 
@@ -51,7 +70,20 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void UnEquipWeapon();
 
+	//The player is in movement
+	UFUNCTION()
+    bool IsInMovement();
+
 protected:
+
+	//Collect the energy
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	void CollectEnergy();
+
+	//This Function will called from CollectEnergy
+	UFUNCTION(BlueprintImplementableEvent, Category = Energy)
+	void RechargeEnergy(float Energy);
+
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	TSubobjectPtr<UCameraComponent> FirstPersonCameraComponent;

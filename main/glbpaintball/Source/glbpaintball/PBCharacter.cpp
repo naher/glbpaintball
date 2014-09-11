@@ -9,6 +9,12 @@
 APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
+	/** Initial values for Energy and speed Variables*/
+	EnergyLevel = 1000.0f;
+    SpeedFactor = 0.95f;
+	BaseSpeed = 90.0f;
+	Health = 100.0f;
+	
 	// Start game in first person mode
 	bIsFirstPersonCamera = true;
 
@@ -190,4 +196,24 @@ void APBCharacter::UnEquipWeapon()
 		ActiveWeapon->OnUnEquip();
 		ActiveWeapon = nullptr;
 	}
+}
+
+void APBCharacter::CollectEnergy()
+{
+
+}
+
+bool APBCharacter::IsInMovement()
+{
+	FVector velocity = GetVelocity();
+	if (velocity.X == 0 && velocity.Y == 0 && velocity.Z == 0)
+		return false;
+
+	return true;
+}
+
+void APBCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	CharacterMovement->MaxWalkSpeed = SpeedFactor * EnergyLevel + BaseSpeed;
 }
