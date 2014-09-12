@@ -192,11 +192,7 @@ void APBCharacter::CollectEnergy()
 
 bool APBCharacter::IsInMovement()
 {
-	FVector velocity = GetVelocity();
-	if (velocity.X == 0 && velocity.Y == 0 && velocity.Z == 0)
-		return false;
-
-	return true;
+	return !GetVelocity().IsZero();
 }
 
 void APBCharacter::Tick(float DeltaSeconds)
@@ -229,4 +225,9 @@ APBWeapon * APBCharacter::GetWeapon(UClass * WeaponClass) const
 		}
 	}
 	return nullptr;
+}
+
+void APBCharacter::RechargeEnergy(float Energy)
+{
+	EnergyLevel += Energy;
 }
