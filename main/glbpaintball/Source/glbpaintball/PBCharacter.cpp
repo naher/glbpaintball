@@ -227,13 +227,14 @@ APBWeapon * APBCharacter::GetWeapon(UClass * WeaponClass) const
 	return nullptr;
 }
 
-<<<<<<< HEAD
+
 void APBCharacter::ApplyDamage(float damage)
 {
 	EnergyLevel -= damage;
-=======
+}
+
 void APBCharacter::RechargeEnergy(float Energy)
 {
 	EnergyLevel += Energy;
->>>>>>> origin/master
+
 }

@@ -67,35 +67,24 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void UnEquipWeapon();
 
-<<<<<<< HEAD
-	//The player is in movement
-	UFUNCTION()
-    bool IsInMovement();
-=======
 	/** True if the player is moving */
 	UFUNCTION()
     bool IsInMovement();
 
->>>>>>> origin/master
 	/** Adds Weapon to inventory. Returns true if weapon added correctly, false otherwise. */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool AddWeaponToInventory(class APBWeapon * Weapon);
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	APBWeapon * GetWeapon(UClass * WeaponClass) const;
-<<<<<<< HEAD
-=======
 
 	/** Add Energy to the character */
 	UFUNCTION(BlueprintCallable, Category = Energy)
 	void RechargeEnergy(float Energy);
 
 protected:
->>>>>>> origin/master
-
 	//ApplyDamage
 	UFUNCTION(BlueprintCallable, Category = Energy)
-<<<<<<< HEAD
 	void ApplyDamage(float damage);
 
 protected:
@@ -105,9 +94,7 @@ protected:
 	/** socket or bone name for attaching weapon mesh */
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
 	FName WeaponAttachPoint;
-=======
 	void CollectEnergy();
->>>>>>> origin/master
 	
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
