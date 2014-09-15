@@ -57,6 +57,26 @@ int32 APBWeapon::GetSlotNumber() const
 void APBWeapon::AddAmmo(int32 AmmoInc)
 {
 	Ammo += AmmoInc;
+
+	if (Ammo > MaxAmmo)
+	{
+		Ammo = MaxAmmo;
+	}
+}
+
+int32 APBWeapon::GetAmmo() const
+{
+	return Ammo;
+}
+
+void APBWeapon::SetMaxAmmo(int32 Max)
+{
+	MaxAmmo = Max;
+}
+
+int32 APBWeapon::GetMaxAmmo() const
+{
+	return MaxAmmo;
 }
 
 void APBWeapon::Fire()

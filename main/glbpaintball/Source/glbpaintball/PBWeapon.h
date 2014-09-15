@@ -34,6 +34,15 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 	UFUNCTION()
 	void AddAmmo(int32 AmmoInc);
 
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	int32 GetAmmo() const;
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	void SetMaxAmmo(int32 Max);
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	int32 GetMaxAmmo() const;
+
 protected:
 	virtual void Fire();
 
@@ -64,7 +73,10 @@ protected:
 
 	/** Left ammunition */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
-	float Ammo;
+	int32 Ammo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	int32 MaxAmmo;
 
 	/** true if this weapon can fire several bullets on a single click */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
