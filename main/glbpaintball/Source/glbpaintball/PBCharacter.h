@@ -82,7 +82,6 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Energy)
 	void RechargeEnergy(float Energy);
 
-protected:
 	//ApplyDamage
 	UFUNCTION(BlueprintCallable, Category = Energy)
 	void ApplyDamage(float damage);
@@ -128,12 +127,4 @@ protected:
 	//handles strafing
 	UFUNCTION()
 	void MoveRight(float Val);
-
-	//Collect the energy
-	UFUNCTION(BlueprintCallable, Category = Energy)
-	void CollectEnergy();
-
-	//This Function will called from CollectEnergy
-	UFUNCTION(BlueprintImplementableEvent, Category = Energy)
-	void RechargeEnergy(float Energy);
 };
