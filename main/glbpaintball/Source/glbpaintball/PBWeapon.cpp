@@ -17,16 +17,19 @@ APBWeapon::APBWeapon(const class FPostConstructInitializeProperties& PCIP)
 
 void APBWeapon::OnTriggerPress()
 {
-	Fire();
+	if (CurrentState != EWeaponState::OnCooldown)
+	{
+		Fire();
+	}
 }
 
 void APBWeapon::OnTriggerRelease()
 {
-	// delete existing timers
-	GetWorldTimerManager().SetTimer(this, &APBWeapon::Fire, -1, false);
-
-	// set the new state of the weapon
-	CurrentState = EWeaponState::Idle;
+	if (isAutomatic) // if weapon is automatic, stop firing when we release the trigger
+	{
+		// delete existing timers
+		GetWorldTimerManager().SetTimer(this, &APBWeapon::Fire, -1, false);
+	}
 }
 
 void APBWeapon::OnEquip(APBCharacter * WeaponOwner)
@@ -54,6 +57,26 @@ int32 APBWeapon::GetSlotNumber() const
 void APBWeapon::AddAmmo(int32 AmmoInc)
 {
 	Ammo += AmmoInc;
+
+	if (Ammo > MaxAmmo)
+	{
+		Ammo = MaxAmmo;
+	}
+}
+
+int32 APBWeapon::GetAmmo() const
+{
+	return Ammo;
+}
+
+void APBWeapon::SetMaxAmmo(int32 Max)
+{
+	MaxAmmo = Max;
+}
+
+int32 APBWeapon::GetMaxAmmo() const
+{
+	return MaxAmmo;
 }
 
 void APBWeapon::Fire()
@@ -95,9 +118,21 @@ void APBWeapon::Fire()
 		}
 
 		// if we have to keep shooting, call Fire() again in a while
-		if (CurrentState == EWeaponState::Firing && FiringSpeed > 0)
+		if (CurrentState == EWeaponState::Firing && isAutomatic && FiringSpeed > 0)
 		{
 			GetWorldTimerManager().SetTimer(this, &APBWeapon::Fire, 1 / FiringSpeed, true);
 		}
+		
+		//set it on cooldown if needed
+		if (TimeOnCooldown > 0)
+		{
+			CurrentState = EWeaponState::OnCooldown;
+			GetWorldTimerManager().SetTimer(this, &APBWeapon::SetOffCooldown, TimeOnCooldown, false);
+		}
+		else
+		{
+			CurrentState = EWeaponState::Idle;
+		}
+
 	}
 }
