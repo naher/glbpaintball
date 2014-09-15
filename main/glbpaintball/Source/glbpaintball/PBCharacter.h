@@ -30,7 +30,6 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Health)
 	float Health;
 	
-
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
@@ -68,29 +67,28 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void UnEquipWeapon();
 
-<<<<<<< HEAD
 	//The player is in movement
 	UFUNCTION()
     bool IsInMovement();
-=======
 	/** Adds Weapon to inventory. Returns true if weapon added correctly, false otherwise. */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool AddWeaponToInventory(class APBWeapon * Weapon);
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	APBWeapon * GetWeapon(UClass * WeaponClass) const;
->>>>>>> origin/master
+
+	//ApplyDamage
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	void ApplyDamage(float damage);
 
 protected:
 
-	//Collect the energy
-	UFUNCTION(BlueprintCallable, Category = Energy)
-	void CollectEnergy();
+	bool bIsFirstPersonCamera;
 
-	//This Function will called from CollectEnergy
-	UFUNCTION(BlueprintImplementableEvent, Category = Energy)
-	void RechargeEnergy(float Energy);
-
+	/** socket or bone name for attaching weapon mesh */
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+	FName WeaponAttachPoint;
+	
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	TSubobjectPtr<UCameraComponent> FirstPersonCameraComponent;
@@ -124,10 +122,11 @@ protected:
 	UFUNCTION()
 	void MoveRight(float Val);
 
-	bool bIsFirstPersonCamera;
+	//Collect the energy
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	void CollectEnergy();
 
-	/** socket or bone name for attaching weapon mesh */
-	UPROPERTY(EditDefaultsOnly, Category = Weapon)
-	FName WeaponAttachPoint;
-
+	//This Function will called from CollectEnergy
+	UFUNCTION(BlueprintImplementableEvent, Category = Energy)
+	void RechargeEnergy(float Energy);
 };

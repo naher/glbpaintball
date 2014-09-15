@@ -185,7 +185,6 @@ void APBCharacter::UnEquipWeapon()
 	}
 }
 
-<<<<<<< HEAD
 void APBCharacter::CollectEnergy()
 {
 
@@ -204,7 +203,8 @@ void APBCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	CharacterMovement->MaxWalkSpeed = SpeedFactor * EnergyLevel + BaseSpeed;
-=======
+}
+
 bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
 {
 	if (Weapon)
@@ -229,5 +229,9 @@ APBWeapon * APBCharacter::GetWeapon(UClass * WeaponClass) const
 		}
 	}
 	return nullptr;
->>>>>>> origin/master
+}
+
+void APBCharacter::ApplyDamage(float damage)
+{
+	EnergyLevel -= damage;
 }
