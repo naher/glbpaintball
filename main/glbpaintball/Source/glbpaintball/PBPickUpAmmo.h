@@ -21,7 +21,7 @@ protected:
 
 	/** which weapon gets ammo? */
 	UPROPERTY(EditAnywhere, Category = Pickup)
-	UClass * WeaponClass;
+	TSubclassOf<class APBWeapon> WeaponClass;
 
 	virtual bool OnPickedUp_Implementation(APBCharacter * Character) override;
 	
