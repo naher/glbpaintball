@@ -4,6 +4,7 @@
 #include "Runtime/AIModule/Classes/Navigation/NavigationComponent.h"
 #include "PBEnemy.h"
 
+#include <sstream>
 
 APBEnemy::APBEnemy(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
@@ -15,7 +16,8 @@ void APBEnemy::BeginPlay()
 {
 	Controller = Cast<AAIController>(GetController());
 
-	PointToChase = FVector(0, 0, 0);
+	SetNextTarget();
+
 }
 
 void APBEnemy::Tick(float DeltaSeconds)
@@ -23,6 +25,11 @@ void APBEnemy::Tick(float DeltaSeconds)
 	if (EPathFollowingRequestResult::Type::AlreadyAtGoal == 
 			Controller->MoveToLocation(PointToChase, 0.2f, true, true, false))
 	{
-		PointToChase = Controller->NavComponent.Get()->GetRandomPointOnNavMesh().Location;
+		SetNextTarget();
 	}
+}
+
+void APBEnemy::SetNextTarget()
+{
+	PointToChase = Controller->NavComponent.Get()->GetRandomPointOnNavMesh().Location;
 }

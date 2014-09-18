@@ -20,6 +20,8 @@ class GLBPAINTBALL_API APBEnemy : public ACharacter
 
 private:
 
+	virtual void SetNextTarget(); // refactor with movable objective?
+
 	AAIController * Controller;
 
 	FVector PointToChase;
