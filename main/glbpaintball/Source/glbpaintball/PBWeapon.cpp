@@ -99,7 +99,7 @@ void APBWeapon::Fire()
 			{
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
-				SpawnParams.Instigator = Instigator;
+				SpawnParams.Instigator = WeaponHolder;
 				// spawn the projectile at the muzzle
 				APBProjectile* const Projectile = World->SpawnActor<APBProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 				if (Projectile)

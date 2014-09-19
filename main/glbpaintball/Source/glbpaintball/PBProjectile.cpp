@@ -25,6 +25,9 @@ APBProjectile::APBProjectile(const class FPostConstructInitializeProperties& PCI
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
+
+	// Default damage
+	Damage = 1.0f;
 }
 
 void APBProjectile::InitVelocity(const FVector& ShootDirection)
@@ -40,6 +43,6 @@ void APBProjectile::OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FV
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		OtherComp->AddImpulseAtLocation(ProjectileMovement->Velocity * 100.0f, Hit.ImpactPoint);
+		OtherActor->TakeDamage(Damage, FDamageEvent(), Instigator->GetController(), this);
 	}
 }
