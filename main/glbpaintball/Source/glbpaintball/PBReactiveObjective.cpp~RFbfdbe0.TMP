@@ -15,7 +15,7 @@ APBReactiveObjective::APBReactiveObjective(const class FPostConstructInitializeP
 	
 	float minDifferenceBetweenAngles = 30;
 	float minRotationAngle = this->GetActorRotation().Yaw;
-	DegreesToRotate = FMath::RandRange(0, 120);
+	DegreesToRotate = FMath::RandRange(0, 360);
 	//MinRotator.Yaw = (this->GetActorRotation().Yaw / 2) * (-1);
 	//MaxRotator.Yaw = this->GetActorRotation().Yaw / 2;
 
@@ -65,16 +65,15 @@ void APBReactiveObjective::Tick(float DeltaSeconds)
 		  ActualRotator = MaxRotator;
 		  IsActualRotatorMax = true;
 	  }
-  }
+  }/*
   else if (this->Status == ES_Attack)
   {
 	  FVector playerLoc = ActiveCharacter->GetActorLocation();
 	  FRotator playerRot = FRotationMatrix::MakeFromX(playerLoc).Rotator();
-	  playerRot.Pitch = GetActorRotation().Pitch;
-	  playerRot.Roll = GetActorRotation().Roll;
-	  FRotator newRot = FMath::RInterpTo(this->GetActorRotation(), playerRot, DeltaSeconds, 9);
+	  playerRot.Yaw -= 90;
+	  FRotator newRot = FMath::RInterpTo(this->GetActorRotation(), playerRot, DeltaSeconds, 2);
 	  this->SetActorRotation(newRot);
-  }
+  }*/
 }
 
 void APBReactiveObjective::OnEndOverlap(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
