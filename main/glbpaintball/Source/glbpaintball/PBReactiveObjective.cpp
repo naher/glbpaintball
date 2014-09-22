@@ -15,7 +15,7 @@ APBReactiveObjective::APBReactiveObjective(const class FPostConstructInitializeP
 	
 	float minDifferenceBetweenAngles = 30;
 	float minRotationAngle = this->GetActorRotation().Yaw;
-	DegreesToRotate = FMath::RandRange(0, 120);
+
 	//MinRotator.Yaw = (this->GetActorRotation().Yaw / 2) * (-1);
 	//MaxRotator.Yaw = this->GetActorRotation().Yaw / 2;
 
@@ -24,6 +24,7 @@ APBReactiveObjective::APBReactiveObjective(const class FPostConstructInitializeP
 
 void APBReactiveObjective::BeginPlay()
 {
+	DegreesToRotate = FMath::RandRange(0, 120);
 	float minRotationAngle = this->GetActorRotation().Yaw;
 	MinRotator.Yaw = minRotationAngle;
 	MaxRotator.Yaw = minRotationAngle + DegreesToRotate;
