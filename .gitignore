@@ -9,6 +9,8 @@
 *.lib
 *.bin
 *.exe
+*.tmp
+*.Tmp
 *.a
 *.o
 **/Binaries/**

@@ -48,6 +48,7 @@ void APBPainPlataform::OnOverlap(class AActor* OtherActor, class UPrimitiveCompo
 	if (ActiveCharacter != nullptr && !IsCausingDamage)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, "Hit Plataform");
+		InflictDamage();
 		GetWorldTimerManager().SetTimer(this, &APBPainPlataform::InflictDamage, 1, true);
 		IsCausingDamage = true;
 	}
