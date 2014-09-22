@@ -68,6 +68,26 @@ void APBCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompone
 	InputComponent->BindAction("Fire", IE_Released, this, &APBCharacter::OnFireEnd);
 }
 
+float APBCharacter::GetEnergyLevel() const
+{
+	return EnergyLevel;
+}
+
+void APBCharacter::SetEnergyLevel(float NewEnergyLevel)
+{
+	EnergyLevel = NewEnergyLevel;
+}
+
+float APBCharacter::GetMaxEnergyLevel() const
+{
+	return MaxEnergyLevel;
+}
+
+void APBCharacter::SetMaxEnergyLevel(float NewMaxEnergyLevel)
+{
+	EnergyLevel = NewMaxEnergyLevel;
+}
+
 void APBCharacter::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
@@ -185,11 +205,6 @@ void APBCharacter::UnEquipWeapon()
 	}
 }
 
-void APBCharacter::CollectEnergy()
-{
-
-}
-
 bool APBCharacter::IsInMovement()
 {
 	return !GetVelocity().IsZero();
@@ -237,4 +252,8 @@ void APBCharacter::RechargeEnergy(float Energy)
 {
 	EnergyLevel += Energy;
 
+	if (EnergyLevel > MaxEnergyLevel)
+	{
+		EnergyLevel = MaxEnergyLevel;
+	}
 }

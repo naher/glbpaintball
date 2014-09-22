@@ -13,26 +13,22 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 {
 
 	GENERATED_UCLASS_BODY()
-	
-	/** Energy level */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
-	float EnergyLevel;
-
-	/** The factor of the Speed */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
-	float SpeedFactor;
-
-	/** The base Speed */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
-	float BaseSpeed;
-
-	/** The base health */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
-	float Health;
-	
+		
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	float GetEnergyLevel() const;
+
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	void SetEnergyLevel(float NewEnergyLevel);
+
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	float GetMaxEnergyLevel() const;
+
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	void SetMaxEnergyLevel(float NewMaxEnergyLevel);
 
 	//sets jump flag when key is pressed
 	UFUNCTION()
@@ -90,10 +86,29 @@ protected:
 
 	bool bIsFirstPersonCamera;
 
+	/** Energy level */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float EnergyLevel;
+
+	/** Max Energy level */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	float MaxEnergyLevel;
+
+	/** The factor of the Speed */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float SpeedFactor;
+
+	/** The base Speed */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float BaseSpeed;
+
+	/** The base health */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
+	float Health;
+
 	/** socket or bone name for attaching weapon mesh */
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
 	FName WeaponAttachPoint;
-	void CollectEnergy();
 	
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)

@@ -30,9 +30,9 @@ void APBGameMode::Tick(float DeltaSeconds)
 
 	if (myCharacter != NULL)
 	{
-	if (myCharacter->IsInMovement() && myCharacter->EnergyLevel > MinimumEnergy)
+	if (myCharacter->IsInMovement() && myCharacter->GetEnergyLevel() > MinimumEnergy)
 	 {
-		myCharacter->EnergyLevel = FMath::FInterpTo(myCharacter->EnergyLevel, 0.f, DeltaSeconds, DecayRate);
+		myCharacter->SetEnergyLevel(FMath::FInterpTo(myCharacter->GetEnergyLevel(), 0.f, DeltaSeconds, DecayRate));
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "Reduce Speed");
 	 }
 	}
