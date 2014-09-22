@@ -12,7 +12,7 @@ APBPickUpAmmo::APBPickUpAmmo(const class FPostConstructInitializeProperties& PCI
 
 }
 
-void APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
+bool APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
 {
 	if (GEngine)
 	{
@@ -21,7 +21,10 @@ void APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
 
 	APBWeapon * Weapon = Character->GetWeapon(WeaponClass);
 
-	if (Weapon) {
+	if (Weapon && (Weapon->GetAmmo() < Weapon->GetMaxAmmo())) {
 		Weapon->AddAmmo(AmmoLoad);
+		return true;
 	}
+	
+	return false;
 }

@@ -3,25 +3,25 @@
 #pragma once
 
 #include "PBPickUp.h"
-#include "PBPickUpAmmo.generated.h"
+#include "PBPickUpMaxAmmo.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GLBPAINTBALL_API APBPickUpAmmo : public APBPickUp
+class GLBPAINTBALL_API APBPickUpMaxAmmo : public APBPickUp
 {
 	GENERATED_UCLASS_BODY()
 
 protected:
 
-	/** how much ammo does it give? */
+	/** Max Ammo increase */
 	UPROPERTY(EditAnywhere, Category = Pickup)
-	int32 AmmoLoad;
+	int32 MaxAmmoInc;
 
-	/** which weapon gets ammo? */
+	/** which weapon gets more max ammo? */
 	UPROPERTY(EditAnywhere, Category = Pickup)
-	TSubclassOf<class APBWeapon> WeaponClass;
+	UClass * WeaponClass;
 
 	virtual bool OnPickedUp_Implementation(APBCharacter * Character) override;
 	

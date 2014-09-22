@@ -13,6 +13,24 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 {
 
 	GENERATED_UCLASS_BODY()
+	
+	/** Energy level */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float EnergyLevel;
+
+	/** The factor of the Speed */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float SpeedFactor;
+
+	/** The base Speed */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float BaseSpeed;
+
+	/** The base health */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
+	float Health;
+	
+	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
 
@@ -49,10 +67,34 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void UnEquipWeapon();
 
+	/** True if the player is moving */
+	UFUNCTION()
+    bool IsInMovement();
+
+	/** Adds Weapon to inventory. Returns true if weapon added correctly, false otherwise. */
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	bool AddWeaponToInventory(class APBWeapon * Weapon);
+
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	APBWeapon * GetWeapon(UClass * WeaponClass) const;
 
+	/** Add Energy to the character */
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	void RechargeEnergy(float Energy);
+
+	//ApplyDamage
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	void ApplyDamage(float damage);
+
 protected:
+
+	bool bIsFirstPersonCamera;
+
+	/** socket or bone name for attaching weapon mesh */
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+	FName WeaponAttachPoint;
+	void CollectEnergy();
+	
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	TSubobjectPtr<UCameraComponent> FirstPersonCameraComponent;
@@ -69,6 +111,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Transient, Category = Inventory)
 	TArray<class APBWeapon*> Inventory;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Inventory)
+	int32 InventorySize;
+
 	/** Weapon held by the character */
 	UPROPERTY(VisibleAnywhere, Category = Inventory)
 	class APBWeapon * ActiveWeapon;
@@ -82,11 +127,4 @@ protected:
 	//handles strafing
 	UFUNCTION()
 	void MoveRight(float Val);
-
-	bool bIsFirstPersonCamera;
-
-	/** socket or bone name for attaching weapon mesh */
-	UPROPERTY(EditDefaultsOnly, Category = Weapon)
-	FName WeaponAttachPoint;
-
 };

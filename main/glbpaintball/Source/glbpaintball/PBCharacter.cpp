@@ -7,6 +7,12 @@
 APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
+	/** Initial values for Energy and speed Variables*/
+	EnergyLevel = 1000.0f;
+    SpeedFactor = 0.95f;
+	BaseSpeed = 90.0f;
+	Health = 100.0f;
+	
 	// Start game in first person mode
 	bIsFirstPersonCamera = true;
 
@@ -37,13 +43,14 @@ void APBCharacter::BeginPlay()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Using FPSCharacter"));
 	}
 
+	Inventory.AddZeroed(InventorySize);
 	for (auto WeaponClass : DefaultInventoryClasses)
 	{
 		// Create new weapon and equip it
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.bNoCollisionFail = true;
 		APBWeapon* NewWeapon = GetWorld()->SpawnActor<APBWeapon>(WeaponClass, SpawnInfo);
-		Inventory.Add(NewWeapon);
+		Inventory.Insert(NewWeapon, NewWeapon->GetSlotNumber());
 	}
 }
 
@@ -178,6 +185,36 @@ void APBCharacter::UnEquipWeapon()
 	}
 }
 
+void APBCharacter::CollectEnergy()
+{
+
+}
+
+bool APBCharacter::IsInMovement()
+{
+	return !GetVelocity().IsZero();
+}
+
+void APBCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	CharacterMovement->MaxWalkSpeed = SpeedFactor * EnergyLevel + BaseSpeed;
+}
+
+bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
+{
+	if (Weapon)
+	{
+		if (Inventory.Num() > Weapon->GetSlotNumber() && !Inventory[Weapon->GetSlotNumber()])
+		{
+			Inventory.Insert(Weapon, Weapon->GetSlotNumber());
+			return true;
+		}
+	}
+
+	return false;
+}
+
 APBWeapon * APBCharacter::GetWeapon(UClass * WeaponClass) const
 {
 	for (auto Weapon : Inventory)
@@ -188,4 +225,16 @@ APBWeapon * APBCharacter::GetWeapon(UClass * WeaponClass) const
 		}
 	}
 	return nullptr;
+}
+
+
+void APBCharacter::ApplyDamage(float damage)
+{
+	EnergyLevel -= damage;
+}
+
+void APBCharacter::RechargeEnergy(float Energy)
+{
+	EnergyLevel += Energy;
+
 }

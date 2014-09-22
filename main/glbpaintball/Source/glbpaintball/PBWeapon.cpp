@@ -17,25 +17,19 @@ APBWeapon::APBWeapon(const class FPostConstructInitializeProperties& PCIP)
 
 void APBWeapon::OnTriggerPress()
 {
-	if (Ammo > 0)
+	if (CurrentState != EWeaponState::OnCooldown)
 	{
 		Fire();
-
-		// if we have to keep shooting, call Fire() again in a while
-		if (CurrentState == EWeaponState::Firing && FiringSpeed > 0)
-		{
-			GetWorldTimerManager().SetTimer(this, &APBWeapon::Fire, 1 / FiringSpeed, false);
-		}
 	}
 }
 
 void APBWeapon::OnTriggerRelease()
 {
-	// delete existing timers
-	GetWorldTimerManager().SetTimer(this, &APBWeapon::Fire, -1, false);
-
-	// set the new state of the weapon
-	CurrentState = EWeaponState::Idle;
+	if (isAutomatic) // if weapon is automatic, stop firing when we release the trigger
+	{
+		// delete existing timers
+		GetWorldTimerManager().SetTimer(this, &APBWeapon::Fire, -1, false);
+	}
 }
 
 void APBWeapon::OnEquip(APBCharacter * WeaponOwner)
@@ -55,44 +49,90 @@ void APBWeapon::OnUnEquip()
 	WeaponMesh->SetHiddenInGame(true);
 }
 
+int32 APBWeapon::GetSlotNumber() const
+{
+	return SlotNumber;
+}
+
 void APBWeapon::AddAmmo(int32 AmmoInc)
 {
 	Ammo += AmmoInc;
+
+	if (Ammo > MaxAmmo)
+	{
+		Ammo = MaxAmmo;
+	}
+}
+
+int32 APBWeapon::GetAmmo() const
+{
+	return Ammo;
+}
+
+void APBWeapon::SetMaxAmmo(int32 Max)
+{
+	MaxAmmo = Max;
+}
+
+int32 APBWeapon::GetMaxAmmo() const
+{
+	return MaxAmmo;
 }
 
 void APBWeapon::Fire()
 {
-	// try and fire a projectile
-	if (ProjectileClass != NULL)
+	if (Ammo > 0)
 	{
-		// Get the camera transform
-		FVector CameraLoc;
-		FRotator CameraRot;
-		WeaponHolder->GetActorEyesViewPoint(CameraLoc, CameraRot);
-		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the camera to find the final muzzle position
-		FVector const MuzzleLocation = CameraLoc + FTransform(CameraRot).TransformVector(MuzzleOffset);
-		FRotator MuzzleRotation = CameraRot;
-		MuzzleRotation.Pitch += 10.0f;          // skew the aim upwards a bit
-		UWorld* const World = GetWorld();
-		if (World)
+		// try and fire a projectile
+		if (ProjectileClass != NULL)
 		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = this;
-			SpawnParams.Instigator = Instigator;
-			// spawn the projectile at the muzzle
-			APBProjectile* const Projectile = World->SpawnActor<APBProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-			if (Projectile)
+			// Get the camera transform
+			FVector CameraLoc;
+			FRotator CameraRot;
+			WeaponHolder->GetActorEyesViewPoint(CameraLoc, CameraRot);
+			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the camera to find the final muzzle position
+			FVector const MuzzleLocation = CameraLoc + FTransform(CameraRot).TransformVector(MuzzleOffset);
+			FRotator MuzzleRotation = CameraRot;
+			MuzzleRotation.Pitch += 10.0f;          // skew the aim upwards a bit
+			UWorld* const World = GetWorld();
+			if (World)
 			{
-				// find launch direction
-				FVector const LaunchDir = MuzzleRotation.Vector();
-				Projectile->InitVelocity(LaunchDir);
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				SpawnParams.Instigator = WeaponHolder;
+				// spawn the projectile at the muzzle
+				APBProjectile* const Projectile = World->SpawnActor<APBProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+				if (Projectile)
+				{
+					// find launch direction
+					FVector const LaunchDir = MuzzleRotation.Vector();
+					Projectile->InitVelocity(LaunchDir);
 
-				// set the new state of the weapon
-				CurrentState = EWeaponState::Firing;
+					// set the new state of the weapon
+					CurrentState = EWeaponState::Firing;
 
-				// reduce the ammo left
-				Ammo--;
+					// reduce the ammo left
+					Ammo--;
+				}
 			}
 		}
+
+		// if we have to keep shooting, call Fire() again in a while
+		if (CurrentState == EWeaponState::Firing && isAutomatic && FiringSpeed > 0)
+		{
+			GetWorldTimerManager().SetTimer(this, &APBWeapon::Fire, 1 / FiringSpeed, true);
+		}
+		
+		//set it on cooldown if needed
+		if (TimeOnCooldown > 0)
+		{
+			CurrentState = EWeaponState::OnCooldown;
+			GetWorldTimerManager().SetTimer(this, &APBWeapon::SetOffCooldown, TimeOnCooldown, false);
+		}
+		else
+		{
+			CurrentState = EWeaponState::Idle;
+		}
+
 	}
 }

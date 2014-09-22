@@ -14,7 +14,7 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 	GENERATED_UCLASS_BODY()
 
 	//** Current state of our weapon */
-	enum EWeaponState { Idle, Firing };
+	enum EWeaponState { Idle, Firing, OnCooldown };
 
 	UFUNCTION()
 	virtual void OnTriggerPress();
@@ -28,11 +28,25 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 	UFUNCTION()
 	virtual void OnUnEquip();
 
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	int32 GetSlotNumber() const;
+
 	UFUNCTION()
 	void AddAmmo(int32 AmmoInc);
 
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	int32 GetAmmo() const;
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	void SetMaxAmmo(int32 Max);
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	int32 GetMaxAmmo() const;
+
 protected:
 	virtual void Fire();
+
+	inline void SetOffCooldown() { CurrentState = EWeaponState::Idle; }
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
@@ -42,6 +56,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
 	TSubclassOf<class APBProjectile> ProjectileClass;
 
+	/** Key used to equip this weapon */
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+	int32 SlotNumber;
+
 	/** Gun muzzle's offset from the camera location */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	FVector MuzzleOffset;
@@ -50,9 +68,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	float FiringSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	float TimeOnCooldown;
+
 	/** Left ammunition */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
-	float Ammo;
+	int32 Ammo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	int32 MaxAmmo;
+
+	/** true if this weapon can fire several bullets on a single click */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	bool isAutomatic;
 
 	class APBCharacter * WeaponHolder;
 
