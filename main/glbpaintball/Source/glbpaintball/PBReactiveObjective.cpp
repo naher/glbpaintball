@@ -42,13 +42,23 @@ void APBReactiveObjective::BeginPlay()
 	Weapon->SetAmmo(-1);
 }
 
+void APBReactiveObjective::FaceAndRotateToPoint(FVector point, float deltaSeconds)
+{
+	FRotator playerRot = FRotationMatrix::MakeFromX(point - this->GetActorLocation()).Rotator();
+	playerRot.Pitch = GetActorRotation().Pitch;
+	playerRot.Roll = GetActorRotation().Roll;
+	playerRot.Yaw -= 90;
+	FRotator newRot = FMath::RInterpTo(this->GetActorRotation(), playerRot, deltaSeconds, 9);
+	this->SetActorRotation(newRot);
+}
+
 void APBReactiveObjective::Tick(float DeltaSeconds)
 {
   if (PlayerCharacter != NULL && MonitorPoint != NULL)
   {
 	FVector PlayerToMonitor = MonitorPoint->GetActorLocation() - PlayerCharacter->GetActorLocation();
 
-	// f(MaxDist)=0 = FromPoint.Location
+	// f(MaxDist)=0 = FromPoint.Location{
 	float MovementRatio = 1 - FMath::Clamp<float>(PlayerToMonitor.Size(), MinDist, MaxDist) / MaxDist;
 	
 	FVector NewLocation = FMath::Lerp<FVector, float>(FromPoint->GetActorLocation(), ToPoint->GetActorLocation(), MovementRatio);
@@ -79,22 +89,17 @@ void APBReactiveObjective::Tick(float DeltaSeconds)
   else if (this->Status == ES_Attack)
   {
 	  FVector playerLoc = ActiveCharacter->GetActorLocation();
-	  FRotator playerRot = FRotationMatrix::MakeFromX(playerLoc).Rotator();
-	  playerRot.Pitch = GetActorRotation().Pitch;
-	  playerRot.Roll = GetActorRotation().Roll;
-	  FRotator newRot = FMath::RInterpTo(this->GetActorRotation(), playerRot, DeltaSeconds, 9);
-	  this->SetActorRotation(newRot);
-
+	  FaceAndRotateToPoint(playerLoc, DeltaSeconds);
 	  Weapon->OnTriggerPress();
   }
 }
 
 void APBReactiveObjective::OnEndOverlap(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	ActiveCharacter = Cast<APBCharacter>(OtherActor);
-	if (ActiveCharacter != nullptr)
+	if (Cast<APBCharacter>(OtherActor) != nullptr)
 	{
 		this->Status = ES_Vigilance;
+		ActiveCharacter = nullptr;
 	}
 }
 
@@ -104,20 +109,6 @@ void APBReactiveObjective::OnOverlap(class AActor* OtherActor, class UPrimitiveC
 
 	if (ActiveCharacter != nullptr)
 	{
-		/*FVector actualPosition = ObjectiveMesh->GetComponentLocation();
-		FVector characterPosition = ActiveCharacter->GetActorLocation();
-
-		float produt = GetDotProductTo(ActiveCharacter);
-		float angle = acosf(produt);
-		FRotator rotation;
-		rotation.Yaw = angle;
-		this->SetActorRotation(rotation);
-		this->RotatingComponent->Deactivate();
-		this->RotatingComponent->StopMovementImmediately();*/
-
-		/*FVector PlayerLoc = ActiveCharacter->GetActorLocation();
-		FRotator PlayerRot = FRotationMatrix::MakeFromX(PlayerLoc).Rotator();
-		this->SetActorRotation(PlayerRot);*/
 		this->Status = ES_Attack;
 	}
 }

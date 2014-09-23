@@ -85,6 +85,11 @@ protected:
 	UFUNCTION()
 	void OnOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
+	/** Set the view to the character face **/
+	UFUNCTION()
+	void FaceAndRotateToPoint(FVector point, float deltaSeconds);
+
+
 private:
 	AActor * PlayerCharacter;
 
