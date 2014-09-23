@@ -37,11 +37,22 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	int32 GetAmmo() const;
 
+	/** Overrides the current Ammo. Does not consider limits. */
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	void SetAmmo(int32 NewAmmo);
+
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void SetMaxAmmo(int32 Max);
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	int32 GetMaxAmmo() const;
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	AActor * GetWeaponHolder() const;
+
+	/** Sets the weapon holder. See OnEquip. */
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	void SetWeaponHolder(AActor * Holder);
 
 protected:
 	virtual void Fire();
@@ -71,7 +82,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	float TimeOnCooldown;
 
-	/** Left ammunition */
+	/** Left ammunition. (ammo < 0: unlimited ammo) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	int32 Ammo;
 
@@ -82,7 +93,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	bool isAutomatic;
 
-	class APBCharacter * WeaponHolder;
+	AActor * WeaponHolder;
 
 
 private:

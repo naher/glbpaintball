@@ -69,6 +69,11 @@ int32 APBWeapon::GetAmmo() const
 	return Ammo;
 }
 
+void APBWeapon::SetAmmo(int32 NewAmmo)
+{
+	Ammo = NewAmmo;
+}
+
 void APBWeapon::SetMaxAmmo(int32 Max)
 {
 	MaxAmmo = Max;
@@ -79,9 +84,19 @@ int32 APBWeapon::GetMaxAmmo() const
 	return MaxAmmo;
 }
 
+AActor * APBWeapon::GetWeaponHolder() const
+{
+	return WeaponHolder;
+}
+
+void APBWeapon::SetWeaponHolder(AActor * Holder)
+{
+	WeaponHolder = Holder;
+}
+
 void APBWeapon::Fire()
 {
-	if (Ammo > 0)
+	if (Ammo != 0)
 	{
 		// try and fire a projectile
 		if (ProjectileClass != NULL)
@@ -99,7 +114,7 @@ void APBWeapon::Fire()
 			{
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
-				SpawnParams.Instigator = WeaponHolder;
+				SpawnParams.Instigator = Cast<APBCharacter>(WeaponHolder);
 				// spawn the projectile at the muzzle
 				APBProjectile* const Projectile = World->SpawnActor<APBProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 				if (Projectile)
@@ -112,7 +127,10 @@ void APBWeapon::Fire()
 					CurrentState = EWeaponState::Firing;
 
 					// reduce the ammo left
-					Ammo--;
+					if (Ammo > 0)
+					{
+						Ammo--;
+					}
 				}
 			}
 		}

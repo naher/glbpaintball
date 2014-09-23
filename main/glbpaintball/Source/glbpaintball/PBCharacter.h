@@ -91,7 +91,7 @@ protected:
 	float EnergyLevel;
 
 	/** Max Energy level */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
 	float MaxEnergyLevel;
 
 	/** The factor of the Speed */

@@ -2,6 +2,7 @@
 
 #include "glbpaintball.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "PBWeapon.h"
 #include "PBReactiveObjective.h"
 
 
@@ -32,6 +33,13 @@ void APBReactiveObjective::BeginPlay()
 	IsActualRotatorMax = true;
 
 	PlayerCharacter = (*(GetWorld()->GetPlayerControllerIterator()))->GetPawn();
+
+	// Create new weapon and equip it
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.bNoCollisionFail = true;
+	Weapon = GetWorld()->SpawnActor<APBWeapon>(WeaponClass, SpawnInfo);
+	Weapon->SetWeaponHolder(this);
+	Weapon->SetAmmo(-1);
 }
 
 void APBReactiveObjective::Tick(float DeltaSeconds)
@@ -66,6 +74,7 @@ void APBReactiveObjective::Tick(float DeltaSeconds)
 		  ActualRotator = MaxRotator;
 		  IsActualRotatorMax = true;
 	  }
+	  Weapon->OnTriggerRelease();
   }
   else if (this->Status == ES_Attack)
   {
@@ -75,6 +84,8 @@ void APBReactiveObjective::Tick(float DeltaSeconds)
 	  playerRot.Roll = GetActorRotation().Roll;
 	  FRotator newRot = FMath::RInterpTo(this->GetActorRotation(), playerRot, DeltaSeconds, 9);
 	  this->SetActorRotation(newRot);
+
+	  Weapon->OnTriggerPress();
   }
 }
 

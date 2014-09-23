@@ -73,6 +73,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 	float MaxDist;
 
+	/** Weapon held by this objetive */
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	TSubclassOf<class APBWeapon> WeaponClass;
 
 	/** called when finish the overlap */
 	UFUNCTION()
@@ -84,5 +87,7 @@ protected:
 
 private:
 	AActor * PlayerCharacter;
+
+	APBWeapon * Weapon;
 	
 };
