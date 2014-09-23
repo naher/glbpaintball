@@ -38,8 +38,11 @@ void APBReactiveObjective::BeginPlay()
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.bNoCollisionFail = true;
 	Weapon = GetWorld()->SpawnActor<APBWeapon>(WeaponClass, SpawnInfo);
-	Weapon->SetWeaponHolder(this);
-	Weapon->SetAmmo(-1);
+	if (Weapon)
+	{
+		Weapon->SetWeaponHolder(this);
+		Weapon->SetAmmo(-1);
+	}
 }
 
 void APBReactiveObjective::FaceAndRotateToPoint(FVector point, float deltaSeconds)
@@ -84,13 +87,19 @@ void APBReactiveObjective::Tick(float DeltaSeconds)
 		  ActualRotator = MaxRotator;
 		  IsActualRotatorMax = true;
 	  }
-	  Weapon->OnTriggerRelease();
+	  if (Weapon)
+	  {
+		  Weapon->OnTriggerRelease();
+	  }
   }
   else if (this->Status == ES_Attack)
   {
 	  FVector playerLoc = ActiveCharacter->GetActorLocation();
 	  FaceAndRotateToPoint(playerLoc, DeltaSeconds);
-	  Weapon->OnTriggerPress();
+	  if (Weapon)
+	  {
+		  Weapon->OnTriggerPress();
+	  }
   }
 }
 
