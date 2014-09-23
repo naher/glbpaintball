@@ -87,7 +87,7 @@ protected:
 
 	/** Set the view to the character face **/
 	UFUNCTION()
-	void FaceAndRotateToPoint(FVector point, float deltaSeconds);
+	void FaceAndRotateToPoint(const FVector & point, float deltaSeconds);
 
 
 private:

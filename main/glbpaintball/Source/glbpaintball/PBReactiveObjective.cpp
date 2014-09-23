@@ -45,12 +45,11 @@ void APBReactiveObjective::BeginPlay()
 	}
 }
 
-void APBReactiveObjective::FaceAndRotateToPoint(FVector point, float deltaSeconds)
+void APBReactiveObjective::FaceAndRotateToPoint(const FVector & point, float deltaSeconds)
 {
 	FRotator playerRot = FRotationMatrix::MakeFromX(point - this->GetActorLocation()).Rotator();
 	playerRot.Pitch = GetActorRotation().Pitch;
 	playerRot.Roll = GetActorRotation().Roll;
-	playerRot.Yaw -= 90;
 	FRotator newRot = FMath::RInterpTo(this->GetActorRotation(), playerRot, deltaSeconds, 9);
 	this->SetActorRotation(newRot);
 }
@@ -68,13 +67,12 @@ void APBReactiveObjective::Tick(float DeltaSeconds)
 
 	SetActorLocation(NewLocation);
   }
- 
-  if (this->Status == ES_Vigilance)
-  {
-	  
-	  FRotator newRot(0, 0, 0);
-	  newRot = FMath::RInterpTo(this->GetActorRotation(), ActualRotator, DeltaSeconds, RotationSpeed);
 
+  FRotator newRot(0, 0, 0);
+  switch (Status)
+  {
+  case ES_Vigilance:
+	  newRot = FMath::RInterpTo(this->GetActorRotation(), ActualRotator, DeltaSeconds, RotationSpeed);
 
 	  this->SetActorRotation(newRot);
 	  if (newRot.Yaw >= (MaxRotator.Yaw - 1) && IsActualRotatorMax)
@@ -87,19 +85,19 @@ void APBReactiveObjective::Tick(float DeltaSeconds)
 		  ActualRotator = MaxRotator;
 		  IsActualRotatorMax = true;
 	  }
+
 	  if (Weapon)
 	  {
 		  Weapon->OnTriggerRelease();
 	  }
-  }
-  else if (this->Status == ES_Attack)
-  {
-	  FVector playerLoc = ActiveCharacter->GetActorLocation();
-	  FaceAndRotateToPoint(playerLoc, DeltaSeconds);
+	  break;
+  case ES_Attack:
+	  FaceAndRotateToPoint(ActiveCharacter->GetActorLocation(), DeltaSeconds);
 	  if (Weapon)
 	  {
 		  Weapon->OnTriggerPress();
 	  }
+	  break;
   }
 }
 
@@ -114,10 +112,11 @@ void APBReactiveObjective::OnEndOverlap(AActor* OtherActor, UPrimitiveComponent*
 
 void APBReactiveObjective::OnOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	ActiveCharacter = Cast<APBCharacter>(OtherActor);
+	APBCharacter * CharOtherActor = Cast<APBCharacter>(OtherActor);
 
-	if (ActiveCharacter != nullptr)
+	if (CharOtherActor != nullptr)
 	{
+		ActiveCharacter = CharOtherActor;
 		this->Status = ES_Attack;
 	}
 }
