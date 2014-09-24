@@ -34,6 +34,9 @@ class GLBPAINTBALL_API APBReactiveObjective : public APBObjective
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ActorRotation)
 	float DegreesToRotate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Difficulty)
+	float ErrorMargin;
+
 	FRotator MinRotator;
 
 	FRotator MaxRotator;
@@ -87,7 +90,7 @@ protected:
 
 	/** Set the view to the character face **/
 	UFUNCTION()
-	void FaceAndRotateToPoint(const FVector & point, float deltaSeconds);
+	void FaceAndRotateToPoint(const FVector & point, float deltaSeconds, float error);
 
 
 private:

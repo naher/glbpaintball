@@ -45,9 +45,12 @@ void APBReactiveObjective::BeginPlay()
 	}
 }
 
-void APBReactiveObjective::FaceAndRotateToPoint(const FVector & point, float deltaSeconds)
+void APBReactiveObjective::FaceAndRotateToPoint(const FVector & point, float deltaSeconds, float error)
 {
-	FRotator playerRot = FRotationMatrix::MakeFromX(point - this->GetActorLocation()).Rotator();
+	FVector ErrorVector(error, error, error);
+	FBox AimBox(point-ErrorVector, point+ErrorVector);
+
+	FRotator playerRot = FRotationMatrix::MakeFromX(FMath::RandPointInBox(AimBox) - this->GetActorLocation()).Rotator();
 	playerRot.Pitch = GetActorRotation().Pitch;
 	playerRot.Roll = GetActorRotation().Roll;
 	FRotator newRot = FMath::RInterpTo(this->GetActorRotation(), playerRot, deltaSeconds, 9);
@@ -92,7 +95,7 @@ void APBReactiveObjective::Tick(float DeltaSeconds)
 	  }
 	  break;
   case ES_Attack:
-	  FaceAndRotateToPoint(ActiveCharacter->GetActorLocation(), DeltaSeconds);
+	  FaceAndRotateToPoint(ActiveCharacter->GetActorLocation(), DeltaSeconds, ErrorMargin);
 	  if (Weapon)
 	  {
 		  Weapon->OnTriggerPress();
