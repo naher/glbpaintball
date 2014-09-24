@@ -18,6 +18,11 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 
 	virtual void BeginPlay() override;
 
+	float TakeDamage(float DamageAmount,
+					 struct FDamageEvent const& DamageEvent,
+					 class AController* EventInstigator,
+					 class AActor* DamageCauser) override;
+
 	UFUNCTION(BlueprintCallable, Category = Energy)
 	float GetEnergyLevel() const;
 

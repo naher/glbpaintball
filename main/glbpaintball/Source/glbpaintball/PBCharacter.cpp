@@ -68,6 +68,14 @@ void APBCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompone
 	InputComponent->BindAction("Fire", IE_Released, this, &APBCharacter::OnFireEnd);
 }
 
+float APBCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
+							   class AController* EventInstigator, class AActor* DamageCauser)
+{
+	EnergyLevel -= DamageAmount*100;
+
+	return DamageAmount;
+}
+
 float APBCharacter::GetEnergyLevel() const
 {
 	return EnergyLevel;
