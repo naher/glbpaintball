@@ -71,7 +71,12 @@ void APBCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompone
 float APBCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 							   class AController* EventInstigator, class AActor* DamageCauser)
 {
-	EnergyLevel -= DamageAmount*100;
+	EnergyLevel -= DamageAmount;
+
+	if (EnergyLevel < MinEnergyLevel)
+	{
+		EnergyLevel = MinEnergyLevel;
+	}
 
 	return DamageAmount;
 }
@@ -94,6 +99,16 @@ float APBCharacter::GetMaxEnergyLevel() const
 void APBCharacter::SetMaxEnergyLevel(float NewMaxEnergyLevel)
 {
 	EnergyLevel = NewMaxEnergyLevel;
+}
+
+float APBCharacter::GetMinEnergyLevel() const
+{
+	return MinEnergyLevel;
+}
+
+void APBCharacter::SetMinEnergyLevel(float NewMinEnergyLevel)
+{
+	EnergyLevel = NewMinEnergyLevel;
 }
 
 void APBCharacter::MoveForward(float Value)
@@ -222,6 +237,11 @@ void APBCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	CharacterMovement->MaxWalkSpeed = SpeedFactor * EnergyLevel + BaseSpeed;
+
+	if (IsInMovement() && EnergyLevel > MinEnergyLevel)
+	{
+		SetEnergyLevel(FMath::FInterpTo(EnergyLevel, MinEnergyLevel, DeltaSeconds, EnergyDecayRate));
+	}
 }
 
 bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)

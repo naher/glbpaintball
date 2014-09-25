@@ -19,21 +19,4 @@ APBGameMode::APBGameMode(const class FPostConstructInitializeProperties& PCIP)
 
 	// use our HUD
 	HUDClass = APBHUD::StaticClass();
-
-	DecayRate = 0.01f;
-	MinimumEnergy = 2;
-}
-
-void APBGameMode::Tick(float DeltaSeconds)
-{
-	APBCharacter * myCharacter = Cast<APBCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
-
-	if (myCharacter != NULL)
-	{
-	if (myCharacter->IsInMovement() && myCharacter->GetEnergyLevel() > MinimumEnergy)
-	 {
-		myCharacter->SetEnergyLevel(FMath::FInterpTo(myCharacter->GetEnergyLevel(), 0.f, DeltaSeconds, DecayRate));
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "Reduce Speed");
-	 }
-	}
 }

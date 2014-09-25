@@ -41,8 +41,15 @@ void APBProjectile::InitVelocity(const FVector& ShootDirection)
 
 void APBProjectile::OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (OtherActor && (OtherActor != this) && OtherComp && Instigator)
+	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		OtherActor->TakeDamage(Damage, FDamageEvent(), Instigator->GetController(), this);
+		if (Instigator)
+		{
+			OtherActor->TakeDamage(Damage, FDamageEvent(), Instigator->GetController(), this);
+		}
+		else
+		{
+			OtherActor->TakeDamage(Damage, FDamageEvent(), nullptr, this);
+		}
 	}
 }

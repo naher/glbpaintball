@@ -35,6 +35,12 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Energy)
 	void SetMaxEnergyLevel(float NewMaxEnergyLevel);
 
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	float GetMinEnergyLevel() const;
+
+	UFUNCTION(BlueprintCallable, Category = Energy)
+	void SetMinEnergyLevel(float NewMinEnergyLevel);
+
 	//sets jump flag when key is pressed
 	UFUNCTION()
 	void OnStartJump();
@@ -99,6 +105,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
 	float MaxEnergyLevel;
 
+	/** Min Energy level */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float MinEnergyLevel;
+
 	/** The factor of the Speed */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
 	float SpeedFactor;
@@ -110,6 +120,10 @@ protected:
 	/** The base health */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
 	float Health;
+
+	/** Energy decay rate */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float EnergyDecayRate;
 
 	/** socket or bone name for attaching weapon mesh */
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
