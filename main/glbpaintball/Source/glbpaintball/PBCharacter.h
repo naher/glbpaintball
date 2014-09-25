@@ -161,4 +161,7 @@ protected:
 	//handles strafing
 	UFUNCTION()
 	void MoveRight(float Val);
+
+private:
+	void SetScreenToDefaultScale();
 };

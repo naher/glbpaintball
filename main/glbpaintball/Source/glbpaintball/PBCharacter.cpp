@@ -71,12 +71,19 @@ void APBCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompone
 float APBCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 							   class AController* EventInstigator, class AActor* DamageCauser)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Ouch."));
 	EnergyLevel -= DamageAmount;
+
+	APlayerCameraManager * CameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
+
+	CameraManager->SetDesiredColorScale(FVector(1.0f, 0.0f, 0.0f), 0.1f);
 
 	if (EnergyLevel < MinEnergyLevel)
 	{
 		EnergyLevel = MinEnergyLevel;
 	}
+
+	GetWorldTimerManager().SetTimer(this, &APBCharacter::SetScreenToDefaultScale, 0.1f, false);
 
 	return DamageAmount;
 }
@@ -284,4 +291,11 @@ void APBCharacter::RechargeEnergy(float Energy)
 	{
 		EnergyLevel = MaxEnergyLevel;
 	}
+}
+
+void APBCharacter::SetScreenToDefaultScale()
+{
+	APlayerCameraManager * CameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
+
+	CameraManager->SetDesiredColorScale(FVector(1.0f, 1.0f, 1.0f), 0.5f);
 }
