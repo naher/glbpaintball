@@ -93,6 +93,9 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Energy)
 	void ApplyDamage(float damage);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
+	TSubobjectPtr <UAudioComponent> AudioCompDamageAction;
+
 protected:
 
 	bool bIsFirstPersonCamera;

@@ -34,6 +34,13 @@ APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	Mesh->SetOwnerNoSee(true);
 
 	ActiveWeapon = nullptr;
+
+	DamageAudioComp = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/Character/Pain1.wav"));
+	if (AudioComp)
+	{
+		AudioComp->AttachParent = RootComponent;
+		AudioComp->bAutoActivate = false;
+	}
 }
 
 void APBCharacter::BeginPlay()

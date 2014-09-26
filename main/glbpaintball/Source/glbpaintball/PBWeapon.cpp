@@ -13,6 +13,13 @@ APBWeapon::APBWeapon(const class FPostConstructInitializeProperties& PCIP)
 	CurrentState = EWeaponState::Idle;
 	WeaponMesh = PCIP.CreateDefaultSubobject<USkeletalMeshComponent>(this, TEXT("FirstPersonMesh"));
 	WeaponMesh->SetHiddenInGame(true);
+	
+	AudioComp = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/Weapons/Assault_Rifle_Gun_Shot.wav"));
+	if (AudioComp)
+	{
+		AudioComp->AttachParent = RootComponent;
+		AudioComp->bAutoActivate = false;
+	}
 }
 
 void APBWeapon::OnTriggerPress()
@@ -84,6 +91,16 @@ int32 APBWeapon::GetMaxAmmo() const
 	return MaxAmmo;
 }
 
+void APBWeapon::SetFiringSpeed(float bulletsPerSecond)
+{ 
+	FiringSpeed = bulletsPerSecond;
+}
+
+void APBWeapon::SetTimeOnCooldown(float time)
+{
+	TimeOnCooldown = time;
+}
+
 AActor * APBWeapon::GetWeaponHolder() const
 {
 	return WeaponHolder;
@@ -119,6 +136,10 @@ void APBWeapon::Fire()
 				APBProjectile* const Projectile = World->SpawnActor<APBProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 				if (Projectile)
 				{
+					//Play Sound
+					AudioComp->Activate(true);
+					AudioComp->Play(0.0f);
+					
 					// find launch direction
 					FVector const LaunchDir = MuzzleRotation.Vector();
 					Projectile->InitVelocity(LaunchDir);

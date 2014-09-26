@@ -45,6 +45,12 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 	void SetMaxAmmo(int32 Max);
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
+	void SetFiringSpeed(float bulletsPerSecond);
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	void SetTimeOnCooldown(float time);
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
 	int32 GetMaxAmmo() const;
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
@@ -92,6 +98,9 @@ protected:
 	/** true if this weapon can fire several bullets on a single click */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	bool isAutomatic;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
+	TSubobjectPtr <UAudioComponent> AudioComp;
 
 	AActor * WeaponHolder;
 

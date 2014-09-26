@@ -42,6 +42,8 @@ void APBReactiveObjective::BeginPlay()
 	{
 		Weapon->SetWeaponHolder(this);
 		Weapon->SetAmmo(-1);
+		Weapon->SetFiringSpeed(1);
+		Weapon->SetTimeOnCooldown(1);
 	}
 }
 
