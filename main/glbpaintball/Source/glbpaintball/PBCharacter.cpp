@@ -2,6 +2,7 @@
 
 #include "glbpaintball.h"
 #include "PBWeapon.h"
+#include "PBOnHitEffectsManager.h"
 #include "PBCharacter.h"
 
 APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
@@ -71,20 +72,18 @@ void APBCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompone
 float APBCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
 							   class AController* EventInstigator, class AActor* DamageCauser)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Ouch."));
 	EnergyLevel -= DamageAmount;
-
-	APlayerCameraManager * CameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
-
-	CameraManager->SetDesiredColorScale(FVector(1.0f, 0.0f, 0.0f), 0.1f);
 
 	if (EnergyLevel < MinEnergyLevel)
 	{
 		EnergyLevel = MinEnergyLevel;
 	}
 
-	GetWorldTimerManager().SetTimer(this, &APBCharacter::SetScreenToDefaultScale, 0.1f, false);
-
+	if (OnHitEffectsManager)
+	{
+		OnHitEffectsManager->NotifyHit();
+	}
+	
 	return DamageAmount;
 }
 
@@ -293,9 +292,7 @@ void APBCharacter::RechargeEnergy(float Energy)
 	}
 }
 
-void APBCharacter::SetScreenToDefaultScale()
+void APBCharacter::SetOnHitEffectsManager(APBOnHitEffectsManager * Manager)
 {
-	APlayerCameraManager * CameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
-
-	CameraManager->SetDesiredColorScale(FVector(1.0f, 1.0f, 1.0f), 0.5f);
+	OnHitEffectsManager = Manager;
 }

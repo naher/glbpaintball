@@ -10,5 +10,7 @@
 UCLASS()
 class GLBPAINTBALL_API APBGameMode : public AGameMode
 {
-	GENERATED_UCLASS_BODY()		
+	GENERATED_UCLASS_BODY()
+
+	void BeginPlay() override;
 };
