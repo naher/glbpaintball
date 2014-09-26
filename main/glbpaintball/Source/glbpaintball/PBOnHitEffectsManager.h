@@ -2,12 +2,24 @@
 
 #pragma once
 
+#include "GameFramework/Actor.h"
+#include "PBOnHitEffectsManager.generated.h"
+
 /**
  * 
  */
-class GLBPAINTBALL_API PBOnHitEffectsManager
+UCLASS(NotPlaceable, HideCategories = (Info, Rendering, MovementReplication, Replication, Actor))
+class GLBPAINTBALL_API APBOnHitEffectsManager : public AActor
 {
-public:
-	PBOnHitEffectsManager();
-	~PBOnHitEffectsManager();
+	GENERATED_UCLASS_BODY()
+
+	void BeginPlay() override;
+
+	void NotifyHit();
+
+private:
+	void SetScreenToDefaultScale();
+	
+	APlayerCameraManager * PlayerCameraManager;
+	
 };
