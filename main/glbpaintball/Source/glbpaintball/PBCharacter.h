@@ -41,6 +41,9 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Energy)
 	void SetMinEnergyLevel(float NewMinEnergyLevel);
 
+	UFUNCTION(BlueprintCallable, Category = Camera)
+	UCameraComponent * GetCamera() const;
+
 	//sets jump flag when key is pressed
 	UFUNCTION()
 	void OnStartJump();
@@ -139,7 +142,7 @@ protected:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	TSubobjectPtr<USkeletalMeshComponent> FirstPersonMesh;
-
+	
 	/** default inventory list */
 	UPROPERTY(EditDefaultsOnly, Category = Inventory)
 	TArray<TSubclassOf<class APBWeapon> > DefaultInventoryClasses;

@@ -23,6 +23,8 @@ private:
 	APlayerCameraManager * PlayerCameraManager;
 
 	class APBCharacter * Character;
+	
+	UCameraComponent * PlayerCamera;
 
 	FVector DefaultScale, OnHitScale;
 	

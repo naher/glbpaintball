@@ -21,6 +21,13 @@ void APBOnHitEffectsManager::BeginPlay()
 	if (Character)
 	{
 		Character->SetOnHitEffectsManager(this);
+		PlayerCamera = Character->GetCamera();
+		if (PlayerCamera) {
+			PlayerCamera->PostProcessSettings.bOverride_VignetteColor = true;
+			PlayerCamera->PostProcessSettings.bOverride_VignetteIntensity = true;
+			PlayerCamera->PostProcessSettings.VignetteColor = FLinearColor(0.2f, 0.0f, 0.0f);
+			PlayerCamera->PostProcessSettings.VignetteIntensity = 0.0f;
+		}
 	}
 }
 
@@ -29,6 +36,15 @@ void APBOnHitEffectsManager::NotifyHit()
 	PlayerCameraManager->SetDesiredColorScale(OnHitScale, 0.1f);
 
 	GetWorldTimerManager().SetTimer(this, &APBOnHitEffectsManager::SetScreenToDefaultScale, 0.1f, false);
+
+	// Change the scale color if low health
+	if (!Character || !PlayerCamera)
+		return;
+
+	float EnergyPercentage = (Character->GetEnergyLevel() - Character->GetMinEnergyLevel())
+							/ (Character->GetMaxEnergyLevel() - Character->GetMinEnergyLevel());
+
+	PlayerCamera->PostProcessSettings.VignetteIntensity = EnergyPercentage < 0.2f ? 1.0f : 0.0f;
 }
 
 void APBOnHitEffectsManager::SetScreenToDefaultScale()
