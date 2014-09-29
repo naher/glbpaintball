@@ -14,6 +14,13 @@ APBPickUp::APBPickUp(const class FPostConstructInitializeProperties& PCIP)
 	PickUpMesh->BodyInstance.SetCollisionProfileName("PickUp");
 
 	RootComponent = PickUpMesh;
+
+	AudioComp = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/PickUps/PicUpGeneric.wav"));
+	if (AudioComp)
+	{
+		AudioComp->AttachParent = RootComponent;
+		AudioComp->bAutoActivate = false;
+	}
 }
 
 bool APBPickUp::OnPickedUp_Implementation(APBCharacter * Character) PURE_VIRTUAL(APBPickUp::OnPickedUp_Implementation, return false;);

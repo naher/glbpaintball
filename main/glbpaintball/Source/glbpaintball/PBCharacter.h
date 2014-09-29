@@ -165,6 +165,9 @@ protected:
 	UFUNCTION()
 	void MoveRight(float Val);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
+	TSubobjectPtr <UAudioComponent> DamageAudioComp;
+
 private:
 	void SetScreenToDefaultScale();
 };

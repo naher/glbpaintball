@@ -36,7 +36,7 @@ APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	ActiveWeapon = nullptr;
 
 	DamageAudioComp = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/Character/Pain1.wav"));
-	if (AudioComp)
+	if (DamageAudioComp)
 	{
 		AudioComp->AttachParent = RootComponent;
 		AudioComp->bAutoActivate = false;

@@ -9,7 +9,12 @@
 APBPickUpAmmo::APBPickUpAmmo(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-
+	AudioComp = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/PickUps/PicUpAmmo.wav"));
+	if (AudioComp)
+	{
+		AudioComp->AttachParent = RootComponent;
+		AudioComp->bAutoActivate = false;
+	}
 }
 
 bool APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
@@ -20,6 +25,10 @@ bool APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
 	}
 
 	APBWeapon * Weapon = Character->GetWeapon(WeaponClass);
+
+	//Play Sound
+	AudioComp->Activate(true);
+	AudioComp->Play(0.0f);
 
 	if (Weapon && (Weapon->GetAmmo() < Weapon->GetMaxAmmo())) {
 		Weapon->AddAmmo(AmmoLoad);

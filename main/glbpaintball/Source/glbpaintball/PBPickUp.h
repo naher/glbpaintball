@@ -17,6 +17,9 @@ class GLBPAINTBALL_API APBPickUp : public AActor
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = PickUp)
 	bool OnPickedUp(class APBCharacter * character);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
+	TSubobjectPtr <UAudioComponent> AudioComp;
+
 protected:
 
 	// Static mesh of the pickup
