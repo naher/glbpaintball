@@ -96,6 +96,9 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
 	TSubobjectPtr <UAudioComponent> AudioCompDamageAction;
 
+	UFUNCTION()
+	void SetOnHitEffectsManager(class APBOnHitEffectsManager * Manager);
+
 protected:
 
 	bool bIsFirstPersonCamera;
@@ -155,6 +158,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = Inventory)
 	class APBWeapon * ActiveWeapon;
 
+	/** Object responsible for On Hit effects */
+	class APBOnHitEffectsManager * OnHitEffectsManager;
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 	//handles moving forward/backward
@@ -164,7 +170,6 @@ protected:
 	//handles strafing
 	UFUNCTION()
 	void MoveRight(float Val);
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
 	TSubobjectPtr <UAudioComponent> DamageAudioComp;
 
