@@ -21,5 +21,9 @@ private:
 	void SetScreenToDefaultScale();
 	
 	APlayerCameraManager * PlayerCameraManager;
+
+	class APBCharacter * Character;
+
+	FVector DefaultScale, OnHitScale;
 	
 };
