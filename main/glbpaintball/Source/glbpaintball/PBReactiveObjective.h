@@ -37,6 +37,9 @@ class GLBPAINTBALL_API APBReactiveObjective : public APBObjective
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Difficulty)
 	float ErrorMargin;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackDelay)
+	float AttackDelay;
+
 	FRotator MinRotator;
 
 	FRotator MaxRotator;
@@ -99,6 +102,10 @@ protected:
 	/** Set the view to the character face **/
 	UFUNCTION()
 	void FaceAndRotateToPoint(const FVector & point, float deltaSeconds, float error);
+
+	/** Set the view to the character face **/
+	UFUNCTION()
+	void StartAtack();
 
 
 private:

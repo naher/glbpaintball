@@ -28,6 +28,8 @@ APBReactiveObjective::APBReactiveObjective(const class FPostConstructInitializeP
 		AudioCompStartAttack->AttachParent = RootComponent;
 		AudioCompStartAttack->bAutoActivate = false;
 	}
+
+	AttackDelay = 0.6;
 }
 
 void APBReactiveObjective::BeginPlay()
@@ -113,12 +115,18 @@ void APBReactiveObjective::Tick(float DeltaSeconds)
   }
 }
 
+void APBReactiveObjective::StartAtack()
+{
+	this->Status = ES_Attack;
+}
+
 void APBReactiveObjective::OnEndOverlap(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (Cast<APBCharacter>(OtherActor) != nullptr)
 	{
 		this->Status = ES_Vigilance;
 		ActiveCharacter = nullptr;
+		GetWorldTimerManager().SetTimer(this, &APBReactiveObjective::StartAtack, -1, false);
 	}
 }
 
@@ -136,6 +144,6 @@ void APBReactiveObjective::OnOverlap(class AActor* OtherActor, class UPrimitiveC
 		}
 
 		ActiveCharacter = CharOtherActor;
-		this->Status = ES_Attack;
+		GetWorldTimerManager().SetTimer(this, &APBReactiveObjective::StartAtack, 1, false);
 	}
 }
