@@ -21,6 +21,10 @@ bool APBPickUpWeapon::OnPickedUp_Implementation(APBCharacter * Character)
 
 	if (NewWeapon)
 	{
+		//Play Sound
+		AudioComp->Activate(true);
+		AudioComp->Play(0.0f);
+
 		if (Character->AddWeaponToInventory(NewWeapon))
 		{
 			return true;

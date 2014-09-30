@@ -15,11 +15,12 @@ APBPickUp::APBPickUp(const class FPostConstructInitializeProperties& PCIP)
 
 	RootComponent = PickUpMesh;
 
-	AudioComp = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/PickUps/PicUpGeneric.wav"));
+	AudioComp = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/PickUps/PickUpGeneric.wav"));
 	if (AudioComp)
 	{
 		AudioComp->AttachParent = RootComponent;
 		AudioComp->bAutoActivate = false;
+		AudioComp->bStopWhenOwnerDestroyed = false;
 	}
 }
 

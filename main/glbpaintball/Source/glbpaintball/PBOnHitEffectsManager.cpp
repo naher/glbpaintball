@@ -25,9 +25,15 @@ void APBOnHitEffectsManager::BeginPlay()
 
 void APBOnHitEffectsManager::NotifyHit()
 {
+	APBCharacter * Character = Cast<APBCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	
 	PlayerCameraManager->SetDesiredColorScale(FVector(1.0f, 0.0f, 0.0f), 0.1f);
 
 	GetWorldTimerManager().SetTimer(this, &APBOnHitEffectsManager::SetScreenToDefaultScale, 0.1f, false);
+
+	//Play damage Sound
+	Character->AudioCompDamage->Activate(true);
+	Character->AudioCompDamage->Play(0.0f);
 }
 
 void APBOnHitEffectsManager::SetScreenToDefaultScale()

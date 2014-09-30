@@ -89,12 +89,8 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Energy)
 	void RechargeEnergy(float Energy);
 
-	//ApplyDamage
-	UFUNCTION(BlueprintCallable, Category = Energy)
-	void ApplyDamage(float damage);
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
-	TSubobjectPtr <UAudioComponent> AudioCompDamageAction;
+	TSubobjectPtr <UAudioComponent> AudioCompDamage;
 
 	UFUNCTION()
 	void SetOnHitEffectsManager(class APBOnHitEffectsManager * Manager);
@@ -170,8 +166,7 @@ protected:
 	//handles strafing
 	UFUNCTION()
 	void MoveRight(float Val);
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
-	TSubobjectPtr <UAudioComponent> DamageAudioComp;
+
 
 private:
 	void SetScreenToDefaultScale();

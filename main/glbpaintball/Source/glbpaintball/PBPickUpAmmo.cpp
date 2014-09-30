@@ -9,12 +9,6 @@
 APBPickUpAmmo::APBPickUpAmmo(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-	AudioComp = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/PickUps/PicUpAmmo.wav"));
-	if (AudioComp)
-	{
-		AudioComp->AttachParent = RootComponent;
-		AudioComp->bAutoActivate = false;
-	}
 }
 
 bool APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)

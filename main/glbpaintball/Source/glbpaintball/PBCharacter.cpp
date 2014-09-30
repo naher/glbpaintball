@@ -36,11 +36,12 @@ APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 
 	ActiveWeapon = nullptr;
 
-	DamageAudioComp = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/Character/Pain1.wav"));
-	if (DamageAudioComp)
+	//Create and initialize the audio components
+	AudioCompDamage = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/Character/Pain1.wav"));
+	if (AudioCompDamage != nullptr)
 	{
-		AudioComp->AttachParent = RootComponent;
-		AudioComp->bAutoActivate = false;
+		AudioCompDamage->AttachParent = RootComponent;
+		AudioCompDamage->bAutoActivate = false;
 	}
 }
 
@@ -281,12 +282,6 @@ APBWeapon * APBCharacter::GetWeapon(UClass * WeaponClass) const
 		}
 	}
 	return nullptr;
-}
-
-
-void APBCharacter::ApplyDamage(float damage)
-{
-	EnergyLevel -= damage;
 }
 
 void APBCharacter::RechargeEnergy(float Energy)
