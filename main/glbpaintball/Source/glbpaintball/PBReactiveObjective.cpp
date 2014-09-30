@@ -21,6 +21,13 @@ APBReactiveObjective::APBReactiveObjective(const class FPostConstructInitializeP
 	//MaxRotator.Yaw = this->GetActorRotation().Yaw / 2;
 
 	RotationSpeed = 7;
+
+	AudioCompStartAttack = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/Enemies/Sentinel/AttackReady.wav"));
+	if (AudioCompStartAttack)
+	{
+		AudioCompStartAttack->AttachParent = RootComponent;
+		AudioCompStartAttack->bAutoActivate = false;
+	}
 }
 
 void APBReactiveObjective::BeginPlay()
@@ -42,7 +49,7 @@ void APBReactiveObjective::BeginPlay()
 	{
 		Weapon->SetWeaponHolder(this);
 		Weapon->SetAmmo(-1);
-		Weapon->SetFiringSpeed(1);
+		Weapon->SetFiringSpeed(2);
 		Weapon->SetTimeOnCooldown(1);
 	}
 }
@@ -121,6 +128,13 @@ void APBReactiveObjective::OnOverlap(class AActor* OtherActor, class UPrimitiveC
 
 	if (CharOtherActor != nullptr)
 	{
+		//Play Sound
+		if (AudioCompStartAttack)
+		{
+			AudioCompStartAttack->Activate(true);
+			AudioCompStartAttack->Play(0.0f);
+		}
+
 		ActiveCharacter = CharOtherActor;
 		this->Status = ES_Attack;
 	}

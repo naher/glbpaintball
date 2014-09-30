@@ -13,8 +13,11 @@ APBPickUpEnergy::APBPickUpEnergy(const class FPostConstructInitializeProperties&
 bool APBPickUpEnergy::OnPickedUp_Implementation(APBCharacter * Character)
 {
 	//Play Sound
-	AudioComp->Activate(true);
-	AudioComp->Play(0.0f);
+	if (AudioComp)
+	{
+		AudioComp->Activate(true);
+		AudioComp->Play(0.0f);
+	}
 
 	Character->RechargeEnergy(Energy);
 	return true;

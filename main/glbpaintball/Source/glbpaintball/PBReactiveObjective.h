@@ -80,6 +80,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Weapon)
 	TSubclassOf<class APBWeapon> WeaponClass;
 
+	/** StartAttack Audio Component*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
+	TSubobjectPtr <UAudioComponent> AudioCompStartAttack;
+
+	/** Die Audio Component*/
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
+	TSubobjectPtr <UAudioComponent> AudioCompDie;*/
+
 	/** called when finish the overlap */
 	UFUNCTION()
 	void OnEndOverlap(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);

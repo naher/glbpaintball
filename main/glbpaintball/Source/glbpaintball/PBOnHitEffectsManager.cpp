@@ -32,8 +32,11 @@ void APBOnHitEffectsManager::NotifyHit()
 	GetWorldTimerManager().SetTimer(this, &APBOnHitEffectsManager::SetScreenToDefaultScale, 0.1f, false);
 
 	//Play damage Sound
-	Character->AudioCompDamage->Activate(true);
-	Character->AudioCompDamage->Play(0.0f);
+	if (Character->AudioCompDamage)
+	{
+		Character->AudioCompDamage->Activate(true);
+		Character->AudioCompDamage->Play(0.0f);
+	}
 }
 
 void APBOnHitEffectsManager::SetScreenToDefaultScale()

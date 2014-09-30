@@ -18,6 +18,13 @@ bool APBPickUpMaxAmmo::OnPickedUp_Implementation(APBCharacter * Character)
 
 	if (Weapon)
 	{
+		//Play Sound
+		if (AudioComp)
+		{
+			AudioComp->Activate(true);
+			AudioComp->Play(0.0f);
+		}
+
 		Weapon->SetMaxAmmo(Weapon->GetMaxAmmo() + MaxAmmoInc);
 		return true;
 	}

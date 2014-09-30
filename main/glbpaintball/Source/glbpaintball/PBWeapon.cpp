@@ -137,8 +137,11 @@ void APBWeapon::Fire()
 				if (Projectile)
 				{
 					//Play Sound
+					if (AudioComp)
+					{
 					AudioComp->Activate(true);
 					AudioComp->Play(0.0f);
+					}
 					
 					// find launch direction
 					FVector const LaunchDir = MuzzleRotation.Vector();
