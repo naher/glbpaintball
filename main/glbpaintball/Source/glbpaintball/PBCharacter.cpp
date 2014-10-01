@@ -51,7 +51,7 @@ void APBCharacter::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Using FPSCharacter"));
 	}
-
+	
 	Inventory.AddZeroed(InventorySize);
 	for (auto WeaponClass : DefaultInventoryClasses)
 	{
@@ -123,6 +123,11 @@ float APBCharacter::GetMinEnergyLevel() const
 void APBCharacter::SetMinEnergyLevel(float NewMinEnergyLevel)
 {
 	EnergyLevel = NewMinEnergyLevel;
+}
+
+UCameraComponent * APBCharacter::GetCamera() const
+{
+	return FirstPersonCameraComponent.Get();
 }
 
 void APBCharacter::MoveForward(float Value)
