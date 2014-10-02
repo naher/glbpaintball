@@ -49,11 +49,16 @@ void APBReactiveObjective::BeginPlay()
 	Weapon = GetWorld()->SpawnActor<APBWeapon>(WeaponClass, SpawnInfo);
 	if (Weapon)
 	{
-		Weapon->SetWeaponHolder(this);
+		Weapon->SetWeaponHolder(InterfaceCast<IPBWeaponHolder>(this));
 		Weapon->SetAmmo(-1);
 		Weapon->SetFiringSpeed(2);
 		Weapon->SetTimeOnCooldown(1);
 	}
+}
+
+void APBReactiveObjective::ApplyWeaponRecoil()
+{
+
 }
 
 void APBReactiveObjective::FaceAndRotateToPoint(const FVector & point, float deltaSeconds, float error)

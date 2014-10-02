@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "PBWeaponHolder.h"
 #include "PBObjective.h"
 #include "GameFramework/Actor.h"
 #include "PBCharacter.h"
@@ -20,7 +21,7 @@ enum EnumStatus
 };
 
 UCLASS()
-class GLBPAINTBALL_API APBReactiveObjective : public APBObjective
+class GLBPAINTBALL_API APBReactiveObjective : public APBObjective, public IPBWeaponHolder
 {
 	GENERATED_UCLASS_BODY()
 
@@ -48,10 +49,17 @@ class GLBPAINTBALL_API APBReactiveObjective : public APBObjective
 
 	bool IsActualRotatorMax;
 
+	/** AnimMontage to play each time we fire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	class UAnimMontage* FireAnimation;
+
 	UFUNCTION()
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	virtual void ApplyWeaponRecoil() override;
 
 protected:
 

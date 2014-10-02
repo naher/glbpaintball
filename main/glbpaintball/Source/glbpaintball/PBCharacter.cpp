@@ -95,6 +95,20 @@ float APBCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& Da
 	return DamageAmount;
 }
 
+void APBCharacter::ApplyWeaponRecoil()
+{
+	// try and play a firing animation if specified
+	if (FireAnimation != NULL)
+	{
+		// Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = FirstPersonMesh->GetAnimInstance();
+		if (AnimInstance != NULL)
+		{
+			AnimInstance->Montage_Play(FireAnimation, 1.f);
+		}
+	}
+}
+
 float APBCharacter::GetEnergyLevel() const
 {
 	return EnergyLevel;
@@ -168,6 +182,7 @@ void APBCharacter::OnFireStart()
 {
 	if (ActiveWeapon)
 	{
+
 		ActiveWeapon->OnTriggerPress();
 	}
 }

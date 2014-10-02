@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "PBWeaponHolder.h"
 #include "GameFramework/Actor.h"
 #include "PBWeapon.generated.h"
 
@@ -58,7 +59,7 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 
 	/** Sets the weapon holder. See OnEquip. */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
-	void SetWeaponHolder(AActor * Holder);
+	void SetWeaponHolder(TScriptInterface<IPBWeaponHolder> * Holder);
 
 protected:
 	virtual void Fire();
@@ -102,7 +103,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
 	TSubobjectPtr <UAudioComponent> AudioComp;
 
-	AActor * WeaponHolder;
+	TScriptInterface<IPBWeaponHolder> * WeaponHolder;
 
 
 private:

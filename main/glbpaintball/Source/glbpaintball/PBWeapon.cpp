@@ -47,7 +47,7 @@ void APBWeapon::OnEquip(APBCharacter * WeaponOwner)
 	WeaponMesh->AttachTo(FirstPersonMesh, AttachPoint, EAttachLocation::SnapToTarget);
 	WeaponMesh->SetHiddenInGame(false);
 	Instigator = WeaponOwner;
-	WeaponHolder = WeaponOwner;
+	WeaponHolder = InterfaceCast<IPBWeaponHolder>(WeaponOwner);
 }
 
 void APBWeapon::OnUnEquip()
@@ -106,7 +106,7 @@ AActor * APBWeapon::GetWeaponHolder() const
 	return WeaponHolder;
 }
 
-void APBWeapon::SetWeaponHolder(AActor * Holder)
+void APBWeapon::SetWeaponHolder(TScriptInterface<IPBWeaponHolder> * Holder)
 {
 	WeaponHolder = Holder;
 }
@@ -121,7 +121,8 @@ void APBWeapon::Fire()
 			// Get the camera transform
 			FVector CameraLoc;
 			FRotator CameraRot;
-			WeaponHolder->GetActorEyesViewPoint(CameraLoc, CameraRot);
+
+			dynamic_cast <AActor*>(WeaponHolder)->GetActorEyesViewPoint(CameraLoc, CameraRot);
 			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the camera to find the final muzzle position
 			FVector const MuzzleLocation = CameraLoc + FTransform(CameraRot).TransformVector(MuzzleOffset);
 			FRotator MuzzleRotation = CameraRot;
@@ -131,7 +132,7 @@ void APBWeapon::Fire()
 			{
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
-				SpawnParams.Instigator = Cast<APBCharacter>(WeaponHolder);
+				SpawnParams.Instigator = NULL;//Cast<IPBWeaponHolder>(WeaponHolder);
 				// spawn the projectile at the muzzle
 				APBProjectile* const Projectile = World->SpawnActor<APBProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 				if (Projectile)
@@ -142,6 +143,8 @@ void APBWeapon::Fire()
 					AudioComp->Activate(true);
 					AudioComp->Play(0.0f);
 					}
+
+				    //Recoil code
 					
 					// find launch direction
 					FVector const LaunchDir = MuzzleRotation.Vector();
