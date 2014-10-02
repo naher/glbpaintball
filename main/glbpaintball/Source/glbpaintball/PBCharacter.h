@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "PBWeaponHolder.h"
 #include "GameFramework/Character.h"
 #include "PBCharacter.generated.h"
 
@@ -9,10 +10,14 @@
  * 
  */
 UCLASS()
-class GLBPAINTBALL_API APBCharacter : public ACharacter
+class GLBPAINTBALL_API APBCharacter : public ACharacter, public IPBWeaponHolder
 {
 
 	GENERATED_UCLASS_BODY()
+
+	/** AnimMontage to play each time we fire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	class UAnimMontage* FireAnimation;
 		
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -97,6 +102,9 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 
 	UFUNCTION()
 	void SetOnHitEffectsManager(class APBOnHitEffectsManager * Manager);
+	
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	virtual void ApplyWeaponRecoil() override;
 
 protected:
 
