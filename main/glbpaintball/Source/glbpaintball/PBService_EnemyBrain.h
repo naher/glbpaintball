@@ -15,6 +15,10 @@ class GLBPAINTBALL_API UPBService_EnemyBrain : public UBTService_BlackboardBase
 
 	void TickNode(UBehaviorTreeComponent * OwnerComp, uint8 * NodeMemory, float DeltaSeconds) override;
 
+	void InitializeFromAsset(UBehaviorTree * Asset) override;
+
 	FBlackboardKeySelector Status;
+
+	class APBCharacter * Character;
 	
 };

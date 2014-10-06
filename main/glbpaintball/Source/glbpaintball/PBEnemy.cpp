@@ -15,16 +15,7 @@ void APBEnemy::BeginPlay()
 {
 	Controller = Cast<AAIController>(GetController());
 
-	SetNextTarget();
-}
-
-void APBEnemy::Tick(float DeltaSeconds)
-{
-	/*if (EPathFollowingRequestResult::Type::AlreadyAtGoal == 
-			Controller->MoveToLocation(PointToChase, 0.2f, true, true, false))
-	{
-		SetNextTarget();
-	}*/
+	InitialLocation = GetActorLocation();
 }
 
 float APBEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
@@ -45,7 +36,12 @@ float APBEnemy::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	return DamageAmount;
 }
 
-void APBEnemy::SetNextTarget()
+float APBEnemy::GetPatrolRadius() const
 {
-	PointToChase = Controller->NavComponent.Get()->GetRandomPointOnNavMesh().Location;
+	return PatrolRadius;
+}
+
+const FVector & APBEnemy::GetInitialLocation() const
+{
+	return InitialLocation;
 }

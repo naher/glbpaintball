@@ -15,6 +15,4 @@ class GLBPAINTBALL_API UPBTask_PatrolVolume : public UBTTask_BlackboardBase
 
 	EBTNodeResult::Type ExecuteTask(class UBehaviorTreeComponent* OwnerComp, uint8* NodeMemory) override;
 	
-	FVector PointToChase;
-	
 };

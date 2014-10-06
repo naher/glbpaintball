@@ -20,19 +20,25 @@ class GLBPAINTBALL_API APBEnemy : public ACharacter
 
 	void BeginPlay() override;
 
-	void Tick(float DeltaSeconds) override;
-
 	float TakeDamage(float DamageAmount, 
 					 struct FDamageEvent const& DamageEvent, 
 					 class AController* EventInstigator, 
 					 class AActor* DamageCauser) override;
 
-private:
+	float GetPatrolRadius() const;
 
-	virtual void SetNextTarget(); // refactor with movable objective?
+	const FVector & GetInitialLocation() const;
+
+protected:
+
+	/** Radius used when patrolling. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
+	float PatrolRadius;
+
+private:
 
 	AAIController * Controller;
 
-	FVector PointToChase;
+	FVector InitialLocation;
 	
 };

@@ -15,19 +15,30 @@ UPBService_EnemyBrain::UPBService_EnemyBrain(const class FPostConstructInitializ
 
 }
 
+void UPBService_EnemyBrain::InitializeFromAsset(UBehaviorTree * Asset)
+{
+	Super::InitializeFromAsset(Asset);
+
+	Character = Cast<APBCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+}
+
 void UPBService_EnemyBrain::TickNode(UBehaviorTreeComponent * OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
-	APBCharacter * Character = Cast<APBCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
 	UBlackboardComponent * Blackboard = OwnerComp->GetBlackboardComponent();
 
 	uint8 BlackboardKeyID = Blackboard->GetKeyID("Status");
 
-	AAIController * Controller = Cast<AAIController>(OwnerComp->GetOwner());	
+	AAIController * Controller = OwnerComp ? Cast<AAIController>(OwnerComp->GetOwner()) : nullptr;
 
-	float dist = FVector::Dist(Character->GetActorLocation(), Controller->GetPawn()->GetActorLocation());
+	if (!Controller)
+	{
+		return;
+	}
 
-	if (dist > 150.0f)
+	float Distance= FVector::Dist(Character->GetActorLocation(), Controller->GetPawn()->GetActorLocation());
+
+	if (Distance > 150.0f)
 	{
 		Blackboard->SetValueAsEnum(BlackboardKeyID, 0);
 	}
