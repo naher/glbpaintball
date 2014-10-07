@@ -4,6 +4,7 @@
 
 #include "GameFramework/Character.h"
 #include "Runtime/AIModule/Classes/AIController.h"
+#include "PBGameMode.h"
 #include "PBEnemy.generated.h"
 
 /**
@@ -28,6 +29,8 @@ class GLBPAINTBALL_API APBEnemy : public ACharacter
 	float GetPatrolRadius() const;
 
 	const FVector & GetInitialLocation() const;
+
+	EnemyStatus GetStatus() const;
 
 protected:
 
