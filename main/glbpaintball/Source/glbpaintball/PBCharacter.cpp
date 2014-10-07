@@ -10,9 +10,22 @@ APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 {
 	/** Initial values for Energy and speed Variables*/
 	EnergyLevel = 1000.0f;
-    SpeedFactor = 0.95f;
+	NormalSpeedEnergy = EnergyLevel;
+	SpeedFactorWalk = 0.95f;
+	SpeedFactor = SpeedFactorWalk;
+	SpeedFactorRun = 1.35f;
 	BaseSpeed = 90.0f;
 	Health = 100.0f;
+
+	MaxEnergyLevel = 2000;
+	MinEnergyLevel = 150;
+
+	EnergyDecayRateJump = 50;
+	EnergyDecayRateWalk = 0.01;
+	EnergyDecayRateRun = 0.025;
+	EnergyDecayRate = EnergyDecayRateWalk;
+
+	SetMovementStatus(ESM_Walking);
 	
 	// Start game in first person mode
 	bIsFirstPersonCamera = true;
@@ -35,14 +48,6 @@ APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	Mesh->SetOwnerNoSee(true);
 
 	ActiveWeapon = nullptr;
-
-	//Create and initialize the audio components
-	AudioCompDamage = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/Character/Pain1.wav"));
-	if (AudioCompDamage != nullptr)
-	{
-		AudioCompDamage->AttachParent = RootComponent;
-		AudioCompDamage->bAutoActivate = false;
-	}
 }
 
 void APBCharacter::BeginPlay()
@@ -75,6 +80,8 @@ void APBCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompone
 	InputComponent->BindAction("Change_Camera", IE_Pressed, this, &APBCharacter::OnCameraToggle);
 	InputComponent->BindAction("Fire", IE_Pressed, this, &APBCharacter::OnFireStart);
 	InputComponent->BindAction("Fire", IE_Released, this, &APBCharacter::OnFireEnd);
+	InputComponent->BindAction("Run", IE_Pressed, this, &APBCharacter::OnRunStart);
+	InputComponent->BindAction("Run", IE_Released, this, &APBCharacter::OnRunEnd);
 }
 
 float APBCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
@@ -109,6 +116,19 @@ void APBCharacter::ApplyWeaponRecoil()
 	}
 }
 
+void APBCharacter::UpdateAnimationMovementRate(float rate)
+{
+        // Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = FirstPersonMesh->GetAnimInstance();
+		
+		if (AnimInstance != NULL)
+		{
+			FirstPersonMesh->GlobalAnimRateScale =  MovementStatus == ESM_Running ? (rate*1.5) : rate;
+		}
+}
+
+
+
 float APBCharacter::GetEnergyLevel() const
 {
 	return EnergyLevel;
@@ -116,7 +136,7 @@ float APBCharacter::GetEnergyLevel() const
 
 void APBCharacter::SetEnergyLevel(float NewEnergyLevel)
 {
-	EnergyLevel = NewEnergyLevel;
+    EnergyLevel = NewEnergyLevel;
 }
 
 float APBCharacter::GetMaxEnergyLevel() const
@@ -126,7 +146,7 @@ float APBCharacter::GetMaxEnergyLevel() const
 
 void APBCharacter::SetMaxEnergyLevel(float NewMaxEnergyLevel)
 {
-	EnergyLevel = NewMaxEnergyLevel;
+  MaxEnergyLevel = NewMaxEnergyLevel;
 }
 
 float APBCharacter::GetMinEnergyLevel() const
@@ -175,12 +195,20 @@ void APBCharacter::MoveRight(float Value)
 
 void APBCharacter::OnStartJump()
 {
-	bPressedJump = true;
+	if (!IsJumping())
+	{
+		if ((EnergyLevel - EnergyDecayRateJump) >= MinEnergyLevel)
+		{
+			bPressedJump = true;
+			SetMovementStatus(ESM_Jumping);
+		}
+	}
 }
 
 void APBCharacter::OnStopJump()
 {
 	bPressedJump = false;
+	SetMovementStatus(PrevMovementStatus);
 }
 
 void APBCharacter::OnFireStart()
@@ -262,20 +290,67 @@ void APBCharacter::UnEquipWeapon()
 	}
 }
 
+void APBCharacter::SetMovementStatus(int32 status)
+{
+	if (MovementStatus != ESM_Jumping || status != ESM_Jumping)
+	  PrevMovementStatus = MovementStatus;
+
+	MovementStatus = status;
+	switch (status)
+	{
+	    case ESM_Walking:
+		  //SpeedFactor = SpeedFactorWalk;
+		  // EnergyDecayRate = EnergyDecayRateWalk;
+		   break;
+    
+		case ESM_Running:
+			//SpeedFactor = SpeedFactorRun;
+			EnergyDecayRate = EnergyDecayRateRun;
+			break;
+
+		case ESM_Jumping:
+			EnergyLevel -= EnergyDecayRateJump;
+			break;
+	}
+}
+
 bool APBCharacter::IsInMovement()
 {
 	return !GetVelocity().IsZero();
 }
 
+bool APBCharacter::IsRunning()
+{
+	return MovementStatus == ESM_Running;
+}
+
 void APBCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	CharacterMovement->MaxWalkSpeed = SpeedFactor * EnergyLevel + BaseSpeed;
+	float AnimationSpeedRate;
+	float CurrentEnergy = IsRunning() ? EnergyLevel :NormalSpeedEnergy;
 
-	if (IsInMovement() && EnergyLevel > MinEnergyLevel)
+	CharacterMovement->MaxWalkSpeed = SpeedFactor * CurrentEnergy + BaseSpeed;
+	AnimationSpeedRate = CurrentEnergy / 1000;
+
+	if (IsInMovement() && EnergyLevel > MinEnergyLevel && IsRunning())
 	{
 		SetEnergyLevel(FMath::FInterpTo(EnergyLevel, MinEnergyLevel, DeltaSeconds, EnergyDecayRate));
 	}
+
+	UpdateAnimationMovementRate(AnimationSpeedRate);
+	
+	if (MovementStatus == ESM_Walking)
+	  GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Walking"));
+    
+	else if (MovementStatus == ESM_Running)
+	   GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Running"));
+
+	else if (MovementStatus == ESM_Jumping)
+	   GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Jumping"));
+
+	else 
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Unknown"));
 }
 
 bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
@@ -317,4 +392,15 @@ void APBCharacter::RechargeEnergy(float Energy)
 void APBCharacter::SetOnHitEffectsManager(APBOnHitEffectsManager * Manager)
 {
 	OnHitEffectsManager = Manager;
+}
+
+void APBCharacter::OnRunStart()
+{
+	if (EnergyLevel > MinEnergyLevel)
+  	 SetMovementStatus(ESM_Running);
+}
+
+void APBCharacter::OnRunEnd()
+{
+	SetMovementStatus(ESM_Walking);
 }

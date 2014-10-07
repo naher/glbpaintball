@@ -59,7 +59,7 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 
 	/** Sets the weapon holder. See OnEquip. */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
-	void SetWeaponHolder(TScriptInterface<IPBWeaponHolder> * Holder);
+    void SetWeaponHolder(AActor * Holder);
 
 protected:
 	virtual void Fire();
@@ -100,11 +100,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	bool isAutomatic;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
-	TSubobjectPtr <UAudioComponent> AudioComp;
+	/** StartAttack Audio Component*/
+	UPROPERTY(EditDefaultsOnly, Category = Audio)
+	USoundCue * SoundFire;
 
-	TScriptInterface<IPBWeaponHolder> * WeaponHolder;
-
+	AActor * WeaponHolder;
 
 private:
 	EWeaponState CurrentState;

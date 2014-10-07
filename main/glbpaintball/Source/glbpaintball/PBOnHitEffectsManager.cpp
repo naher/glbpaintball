@@ -38,10 +38,9 @@ void APBOnHitEffectsManager::NotifyHit()
 	GetWorldTimerManager().SetTimer(this, &APBOnHitEffectsManager::SetScreenToDefaultScale, 0.1f, false);
 
 	//Play damage Sound
-	if (Character->AudioCompDamage)
+	if (Character->SoundDamage)
 	{
-		Character->AudioCompDamage->Activate(true);
-		Character->AudioCompDamage->Play(0.0f);
+		this->PlaySoundAtLocation(Character->SoundDamage, Character->GetActorLocation(), 1.f, 1.f);
 	}
 
 	// Change the scale color if low health

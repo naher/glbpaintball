@@ -11,12 +11,12 @@
 /**
  * 
  */
-
 UENUM(BlueprintType) 
 enum EnumStatus
 {
  ES_Vigilance UMETA(DisplayName = "Vigilance"),
  ES_Attack UMETA(DisplayName = "Attack"),
+ ES_PreparingAttack UMETA(DisplayName = "PreparingAttack"),
  ES_Dead UMETA(DisplayName = "Dead"),
 };
 
@@ -92,12 +92,8 @@ protected:
 	TSubclassOf<class APBWeapon> WeaponClass;
 
 	/** StartAttack Audio Component*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
-	TSubobjectPtr <UAudioComponent> AudioCompStartAttack;
-
-	/** Die Audio Component*/
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
-	TSubobjectPtr <UAudioComponent> AudioCompDie;*/
+	UPROPERTY(EditDefaultsOnly, Category = Audio)
+	USoundCue *  SoundStartAttack;
 
 	/** called when finish the overlap */
 	UFUNCTION()

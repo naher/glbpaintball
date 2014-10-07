@@ -21,10 +21,9 @@ bool APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
 	APBWeapon * Weapon = Character->GetWeapon(WeaponClass);
 
 	//Play Sound
-	if (AudioComp)
+	if (SoundPickUpItem)
 	{
-		AudioComp->Activate(true);
-		AudioComp->Play(0.0f);
+		this->PlaySoundAtLocation(SoundPickUpItem, GetActorLocation(), 0.5f, 1.f);
 	}
 
 	if (Weapon && (Weapon->GetAmmo() < Weapon->GetMaxAmmo())) {
