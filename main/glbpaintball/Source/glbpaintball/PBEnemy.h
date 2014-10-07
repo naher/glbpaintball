@@ -14,11 +14,7 @@ UCLASS()
 class GLBPAINTBALL_API APBEnemy : public ACharacter
 {
 	GENERATED_UCLASS_BODY()
-
-	/** Health, reduced linearly with damage. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
-	float Health;
-
+	
 	void BeginPlay() override;
 
 	float TakeDamage(float DamageAmount, 
@@ -32,16 +28,37 @@ class GLBPAINTBALL_API APBEnemy : public ACharacter
 
 	EnemyStatus GetStatus() const;
 
+	void Attack();
+
 protected:
 
 	/** Radius used when patrolling. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI)
 	float PatrolRadius;
 
+	/** Weapon held by this objetive */
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	TSubclassOf<class APBWeapon> WeaponClass;
+
+	/** Health, reduced linearly with damage. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
+	float Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Difficulty)
+	float ErrorMarginOnAim;
+
+	/** Set the view to the character face **/
+	UFUNCTION()
+	void FaceAndRotateToPoint(const FVector & point, float deltaSeconds, float error);
+
 private:
 
 	AAIController * Controller;
 
 	FVector InitialLocation;
+
+	class APBWeapon * Weapon;
+
+	class APBCharacter * PlayerCharacter;
 	
 };
