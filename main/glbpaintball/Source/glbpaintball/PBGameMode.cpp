@@ -26,3 +26,13 @@ void APBGameMode::BeginPlay()
 {
 	GetWorld()->SpawnActor<APBOnHitEffectsManager>(APBOnHitEffectsManager::StaticClass());
 }
+
+void APBGameMode::SetEnemyStatus(EnemyStatus NewStatus)
+{
+	GEnemyStatus = NewStatus;
+}
+
+EnemyStatus APBGameMode::GetEnemyStatus() const
+{
+	return GEnemyStatus;
+}

@@ -45,3 +45,8 @@ const FVector & APBEnemy::GetInitialLocation() const
 {
 	return InitialLocation;
 }
+
+EnemyStatus APBEnemy::GetStatus() const
+{
+	return ((APBGameMode*)GetWorld()->GetAuthGameMode())->GetEnemyStatus();
+}
