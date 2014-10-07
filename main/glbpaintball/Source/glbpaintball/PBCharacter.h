@@ -9,6 +9,15 @@
 /**
  * 
  */
+
+UENUM(BlueprintType)
+enum EnumCharacterMovementStatus
+{
+	ESM_Walking UMETA(DisplayName = "Walk"),
+	ESM_Running UMETA(DisplayName = "Run"),
+	ESM_Jumping UMETA(DisplayName = "Jump"),
+};
+
 UCLASS()
 class GLBPAINTBALL_API APBCharacter : public ACharacter, public IPBWeaponHolder
 {
@@ -16,7 +25,7 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter, public IPBWeaponHolder
 	GENERATED_UCLASS_BODY()
 
 	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UAnimMontage* FireAnimation;
 		
 	virtual void Tick(float DeltaSeconds) override;
@@ -57,8 +66,18 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter, public IPBWeaponHolder
 	UFUNCTION()
 	void OnFireStart();
 
+	//clears jump flag when key is released
+	UFUNCTION()
+	void OnRunStart();
+
+	UFUNCTION()
+	void OnRunEnd();
+
 	UFUNCTION()
 	void OnFireEnd();
+
+	UFUNCTION()
+	void SetMovementStatus(int32 status);
 
 	//handles first<->third person camera
 	void OnCameraToggle();
@@ -83,6 +102,10 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter, public IPBWeaponHolder
 	UFUNCTION()
     bool IsInMovement();
 
+	/** True if the player is moving */
+	UFUNCTION()
+	bool IsRunning();
+
 	/** Adds Weapon to inventory. Returns true if weapon added correctly, false otherwise. */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool AddWeaponToInventory(class APBWeapon * Weapon);
@@ -94,8 +117,9 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter, public IPBWeaponHolder
 	UFUNCTION(BlueprintCallable, Category = Energy)
 	void RechargeEnergy(float Energy);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio Component")
-	TSubobjectPtr <UAudioComponent> AudioCompDamage;
+	/** StartAttack Audio Component*/
+	UPROPERTY(EditDefaultsOnly, Category = Audio)
+	USoundCue * SoundDamage;
 
 	UFUNCTION()
 	void SetOnHitEffectsManager(class APBOnHitEffectsManager * Manager);
@@ -111,6 +135,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
 	float EnergyLevel;
 
+	/** Energy level */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float NormalSpeedEnergy;
+
 	/** Max Energy level */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
 	float MaxEnergyLevel;
@@ -123,9 +151,25 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
 	float SpeedFactor;
 
+	/** The factor of the Speed walking */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float SpeedFactorWalk;
+
+	/** The factor of the Speed running*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float SpeedFactorRun;
+
 	/** The base Speed */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
 	float BaseSpeed;
+
+	/**Movement Status of the Objective */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+	int32 MovementStatus;
+
+	/**Movement Status of the Objective */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+	int32 PrevMovementStatus;
 
 	/** The base health */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
@@ -134,6 +178,18 @@ protected:
 	/** Energy decay rate */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
 	float EnergyDecayRate;
+
+	/** Energy decay rate Walk */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float EnergyDecayRateWalk;
+
+	/** Energy decay rate Run */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float EnergyDecayRateRun;
+
+	/** Energy decay rate Jump */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Energy)
+	float EnergyDecayRateJump;
 
 	/** socket or bone name for attaching weapon mesh */
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
@@ -174,6 +230,10 @@ protected:
 	//handles strafing
 	UFUNCTION()
 	void MoveRight(float Val);
+
+	//Update the speed o the Movement Animation
+	UFUNCTION()
+	void UpdateAnimationMovementRate(float rate);
 
 
 private:

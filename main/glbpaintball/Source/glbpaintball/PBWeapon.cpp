@@ -14,12 +14,6 @@ APBWeapon::APBWeapon(const class FPostConstructInitializeProperties& PCIP)
 	WeaponMesh = PCIP.CreateDefaultSubobject<USkeletalMeshComponent>(this, TEXT("FirstPersonMesh"));
 	WeaponMesh->SetHiddenInGame(true);
 	
-	AudioComp = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/Weapons/Assault_Rifle_Gun_Shot.wav"));
-	if (AudioComp)
-	{
-		AudioComp->AttachParent = RootComponent;
-		AudioComp->bAutoActivate = false;
-	}
 }
 
 void APBWeapon::OnTriggerPress()
@@ -47,7 +41,7 @@ void APBWeapon::OnEquip(APBCharacter * WeaponOwner)
 	WeaponMesh->AttachTo(FirstPersonMesh, AttachPoint, EAttachLocation::SnapToTarget);
 	WeaponMesh->SetHiddenInGame(false);
 	Instigator = WeaponOwner;
-	WeaponHolder = InterfaceCast<IPBWeaponHolder>(WeaponOwner);
+	WeaponHolder = WeaponOwner;
 }
 
 void APBWeapon::OnUnEquip()
@@ -106,7 +100,7 @@ AActor * APBWeapon::GetWeaponHolder() const
 	return WeaponHolder;
 }
 
-void APBWeapon::SetWeaponHolder(TScriptInterface<IPBWeaponHolder> * Holder)
+void APBWeapon::SetWeaponHolder(AActor * Holder)
 {
 	WeaponHolder = Holder;
 }
@@ -122,7 +116,7 @@ void APBWeapon::Fire()
 			FVector CameraLoc;
 			FRotator CameraRot;
 
-			dynamic_cast <AActor*>(WeaponHolder)->GetActorEyesViewPoint(CameraLoc, CameraRot);
+			WeaponHolder->GetActorEyesViewPoint(CameraLoc, CameraRot);
 			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the camera to find the final muzzle position
 			FVector const MuzzleLocation = CameraLoc + FTransform(CameraRot).TransformVector(MuzzleOffset);
 			FRotator MuzzleRotation = CameraRot;
@@ -132,19 +126,20 @@ void APBWeapon::Fire()
 			{
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
-				SpawnParams.Instigator = NULL;//Cast<IPBWeaponHolder>(WeaponHolder);
+				SpawnParams.Instigator = NULL;
 				// spawn the projectile at the muzzle
 				APBProjectile* const Projectile = World->SpawnActor<APBProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 				if (Projectile)
 				{
 					//Play Sound
-					if (AudioComp)
+					if (SoundFire)
 					{
-					AudioComp->Activate(true);
-					AudioComp->Play(0.0f);
+						this->PlaySoundAtLocation(SoundFire, GetActorLocation(), 0.5f, 1.f);
 					}
 
+
 				    //Recoil code
+					InterfaceCast<IPBWeaponHolder>(WeaponHolder)->ApplyWeaponRecoil();
 					
 					// find launch direction
 					FVector const LaunchDir = MuzzleRotation.Vector();

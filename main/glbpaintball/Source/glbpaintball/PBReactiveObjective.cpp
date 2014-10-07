@@ -21,14 +21,6 @@ APBReactiveObjective::APBReactiveObjective(const class FPostConstructInitializeP
 	//MaxRotator.Yaw = this->GetActorRotation().Yaw / 2;
 
 	RotationSpeed = 7;
-
-	AudioCompStartAttack = PCIP.CreateDefaultSubobject<UAudioComponent>(this, TEXT("/Game/Audio/Enemies/Sentinel/AttackReady.wav"));
-	if (AudioCompStartAttack)
-	{
-		AudioCompStartAttack->AttachParent = RootComponent;
-		AudioCompStartAttack->bAutoActivate = false;
-	}
-
 	AttackDelay = 0.6;
 }
 
@@ -49,7 +41,7 @@ void APBReactiveObjective::BeginPlay()
 	Weapon = GetWorld()->SpawnActor<APBWeapon>(WeaponClass, SpawnInfo);
 	if (Weapon)
 	{
-		Weapon->SetWeaponHolder(InterfaceCast<IPBWeaponHolder>(this));
+		Weapon->SetWeaponHolder(this);
 		Weapon->SetAmmo(-1);
 		Weapon->SetFiringSpeed(2);
 		Weapon->SetTimeOnCooldown(1);
@@ -58,7 +50,7 @@ void APBReactiveObjective::BeginPlay()
 
 void APBReactiveObjective::ApplyWeaponRecoil()
 {
-
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Enemy Recoil"));
 }
 
 void APBReactiveObjective::FaceAndRotateToPoint(const FVector & point, float deltaSeconds, float error)
@@ -142,12 +134,10 @@ void APBReactiveObjective::OnOverlap(class AActor* OtherActor, class UPrimitiveC
 	if (CharOtherActor != nullptr)
 	{
 		//Play Sound
-		if (AudioCompStartAttack)
+		if (SoundStartAttack)
 		{
-			AudioCompStartAttack->Activate(true);
-			AudioCompStartAttack->Play(0.0f);
+			this->PlaySoundOnActor(SoundStartAttack, 0.5f, 1.2f);
 		}
-
 		ActiveCharacter = CharOtherActor;
 		GetWorldTimerManager().SetTimer(this, &APBReactiveObjective::StartAtack, 1, false);
 	}

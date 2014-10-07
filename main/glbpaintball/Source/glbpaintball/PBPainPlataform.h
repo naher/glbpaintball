@@ -14,15 +14,15 @@ class GLBPAINTBALL_API APBPainPlataform : public AActor
 {
 	GENERATED_UCLASS_BODY()
 
+	/** The factor of the Speed */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Damage)
+	float DamageSeverity;
+
 protected:
 
 	// Static mesh of the pickup
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = PickUp)
 	TSubobjectPtr<UStaticMeshComponent> PainMesh;
-
-	/** The factor of the Speed */
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Damage)
-	float DamageSeverity;
 
 	/** Character hit the painPlataform*/
 	UPROPERTY(VisibleAnywhere, Category = Damage)
