@@ -13,6 +13,7 @@ APBWeapon::APBWeapon(const class FPostConstructInitializeProperties& PCIP)
 	CurrentState = EWeaponState::Idle;
 	WeaponMesh = PCIP.CreateDefaultSubobject<USkeletalMeshComponent>(this, TEXT("FirstPersonMesh"));
 	WeaponMesh->SetHiddenInGame(true);
+	
 }
 
 void APBWeapon::OnTriggerPress()
@@ -84,6 +85,16 @@ int32 APBWeapon::GetMaxAmmo() const
 	return MaxAmmo;
 }
 
+void APBWeapon::SetFiringSpeed(float bulletsPerSecond)
+{ 
+	FiringSpeed = bulletsPerSecond;
+}
+
+void APBWeapon::SetTimeOnCooldown(float time)
+{
+	TimeOnCooldown = time;
+}
+
 AActor * APBWeapon::GetWeaponHolder() const
 {
 	return WeaponHolder;
@@ -109,21 +120,32 @@ void APBWeapon::Fire()
 			// Get the camera transform
 			FVector CameraLoc;
 			FRotator CameraRot;
+
 			WeaponHolder->GetActorEyesViewPoint(CameraLoc, CameraRot);
 			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the camera to find the final muzzle position
 			FVector const MuzzleLocation = CameraLoc + FTransform(CameraRot).TransformVector(MuzzleOffset);
 			FRotator MuzzleRotation = CameraRot;
-			MuzzleRotation.Pitch += 10.0f;          // skew the aim upwards a bit
+			MuzzleRotation.Pitch += 5.0f;          // skew the aim upwards a bit
 			UWorld* const World = GetWorld();
 			if (World)
 			{
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
-				SpawnParams.Instigator = Cast<APBCharacter>(WeaponHolder);
+				SpawnParams.Instigator = NULL;
 				// spawn the projectile at the muzzle
 				APBProjectile* const Projectile = World->SpawnActor<APBProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 				if (Projectile)
 				{
+					//Play Sound
+					if (SoundFire)
+					{
+						this->PlaySoundAtLocation(SoundFire, GetActorLocation(), 0.5f, 1.f);
+					}
+
+
+				    //Recoil code
+					InterfaceCast<IPBWeaponHolder>(WeaponHolder)->ApplyWeaponRecoil();
+					
 					// find launch direction
 					FVector const LaunchDir = MuzzleRotation.Vector();
 					Projectile->InitVelocity(LaunchDir);

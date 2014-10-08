@@ -21,6 +21,12 @@ bool APBPickUpWeapon::OnPickedUp_Implementation(APBCharacter * Character)
 
 	if (NewWeapon)
 	{
+		//Play Sound
+		if (SoundPickUpItem)
+		{
+			this->PlaySoundAtLocation(SoundPickUpItem, GetActorLocation(), 1.f, 1.f);
+		}
+
 		if (Character->AddWeaponToInventory(NewWeapon))
 		{
 			return true;

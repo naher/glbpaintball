@@ -17,6 +17,10 @@ class GLBPAINTBALL_API APBPickUp : public AActor
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = PickUp)
 	bool OnPickedUp(class APBCharacter * character);
 
+	/** Pick Item Sound*/
+	UPROPERTY(EditDefaultsOnly, Category = Audio)
+	USoundCue * SoundPickUpItem;
+
 protected:
 
 	// Static mesh of the pickup

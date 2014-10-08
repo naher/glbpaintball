@@ -4,6 +4,7 @@
 #include "PBHUD.h"
 #include "PBGameMode.h"
 #include "PBCharacter.h"
+#include "PBOnHitEffectsManager.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -18,11 +19,7 @@ APBGameMode::APBGameMode(const class FPostConstructInitializeProperties& PCIP)
 	}
 
 	// use our HUD
-	HUDClass = APBHUD::StaticClass();
-	_settedHUD = false;
-
-	DecayRate = 0.01f;
-	MinimumEnergy = 2;
+	//HUDClass = APBHUD::StaticClass();
 }
 
 void APBGameMode::BeginPlay()
@@ -30,23 +27,21 @@ void APBGameMode::BeginPlay()
 	// Get Main Character.
 	myCharacter = Cast<APBCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
+	GetWorld()->SpawnActor<APBOnHitEffectsManager>(APBOnHitEffectsManager::StaticClass());
+
 	// Create HUDView in BP.
 	OnCreateHUDView();
 
 	// Register the PBEventController into Character.
 	myCharacter->registerEventController(HUDView);
 }
-
-void APBGameMode::Tick(float DeltaSeconds)
-{
-	if (myCharacter != NULL)
-	{
-	if (myCharacter->IsInMovement() && myCharacter->GetEnergyLevel() > MinimumEnergy)
-	 {
-		myCharacter->SetEnergyLevel(FMath::FInterpTo(myCharacter->GetEnergyLevel(), 0.f, DeltaSeconds, DecayRate));
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "Reduce Speed");
-	 }
-	}
-
 	
+void APBGameMode::SetEnemyStatus(EnemyStatus NewStatus)
+{
+	GEnemyStatus = NewStatus;
+}
+
+EnemyStatus APBGameMode::GetEnemyStatus() const
+{
+	return GEnemyStatus;
 }

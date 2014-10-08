@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "PBWeaponHolder.h"
 #include "PBObjective.h"
 #include "GameFramework/Actor.h"
 #include "PBCharacter.h"
@@ -10,17 +11,17 @@
 /**
  * 
  */
-
 UENUM(BlueprintType) 
 enum EnumStatus
 {
  ES_Vigilance UMETA(DisplayName = "Vigilance"),
  ES_Attack UMETA(DisplayName = "Attack"),
+ ES_PreparingAttack UMETA(DisplayName = "PreparingAttack"),
  ES_Dead UMETA(DisplayName = "Dead"),
 };
 
 UCLASS()
-class GLBPAINTBALL_API APBReactiveObjective : public APBObjective
+class GLBPAINTBALL_API APBReactiveObjective : public APBObjective, public IPBWeaponHolder
 {
 	GENERATED_UCLASS_BODY()
 
@@ -34,6 +35,12 @@ class GLBPAINTBALL_API APBReactiveObjective : public APBObjective
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ActorRotation)
 	float DegreesToRotate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Difficulty)
+	float ErrorMargin;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackDelay)
+	float AttackDelay;
+
 	FRotator MinRotator;
 
 	FRotator MaxRotator;
@@ -42,10 +49,17 @@ class GLBPAINTBALL_API APBReactiveObjective : public APBObjective
 
 	bool IsActualRotatorMax;
 
+	/** AnimMontage to play each time we fire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	class UAnimMontage* FireAnimation;
+
 	UFUNCTION()
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	virtual void ApplyWeaponRecoil() override;
 
 protected:
 
@@ -77,6 +91,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Weapon)
 	TSubclassOf<class APBWeapon> WeaponClass;
 
+	/** StartAttack Audio Component*/
+	UPROPERTY(EditDefaultsOnly, Category = Audio)
+	USoundCue *  SoundStartAttack;
+
 	/** called when finish the overlap */
 	UFUNCTION()
 	void OnEndOverlap(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
@@ -87,7 +105,11 @@ protected:
 
 	/** Set the view to the character face **/
 	UFUNCTION()
-	void FaceAndRotateToPoint(FVector point, float deltaSeconds);
+	void FaceAndRotateToPoint(const FVector & point, float deltaSeconds, float error);
+
+	/** Set the view to the character face **/
+	UFUNCTION()
+	void StartAtack();
 
 
 private:

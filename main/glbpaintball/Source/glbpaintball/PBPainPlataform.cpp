@@ -26,7 +26,7 @@ void APBPainPlataform::InflictDamage()
 	if (ActiveCharacter != nullptr)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, "Apply Damage");
-		ActiveCharacter->ApplyDamage(DamageSeverity);
+		ActiveCharacter->TakeDamage(DamageSeverity, FDamageEvent(), nullptr, this);
 	}
 }
 

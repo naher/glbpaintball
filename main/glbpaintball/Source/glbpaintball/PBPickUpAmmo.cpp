@@ -9,7 +9,6 @@
 APBPickUpAmmo::APBPickUpAmmo(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-
 }
 
 bool APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
@@ -20,6 +19,12 @@ bool APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
 	}
 
 	APBWeapon * Weapon = Character->GetWeapon(WeaponClass);
+
+	//Play Sound
+	if (SoundPickUpItem)
+	{
+		this->PlaySoundAtLocation(SoundPickUpItem, GetActorLocation(), 0.5f, 1.f);
+	}
 
 	if (Weapon && (Weapon->GetAmmo() < Weapon->GetMaxAmmo())) {
 		Weapon->AddAmmo(AmmoLoad);

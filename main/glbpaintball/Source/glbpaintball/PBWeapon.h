@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "PBWeaponHolder.h"
 #include "GameFramework/Actor.h"
 #include "PBWeapon.generated.h"
 
@@ -45,6 +46,12 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 	void SetMaxAmmo(int32 Max);
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
+	void SetFiringSpeed(float bulletsPerSecond);
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	void SetTimeOnCooldown(float time);
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
 	int32 GetMaxAmmo() const;
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
@@ -52,7 +59,7 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 
 	/** Sets the weapon holder. See OnEquip. */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
-	void SetWeaponHolder(AActor * Holder);
+    void SetWeaponHolder(AActor * Holder);
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	UTexture2D * GetIcon() const;
@@ -100,7 +107,9 @@ protected:
 	UTexture2D * IconImage;
 
 	AActor * WeaponHolder;
-
+	/** StartAttack Audio Component*/
+	UPROPERTY(EditDefaultsOnly, Category = Audio)
+	USoundCue * SoundFire;
 
 private:
 	EWeaponState CurrentState;

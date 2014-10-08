@@ -6,6 +6,12 @@
 #include "PBCharacter.h"
 #include "PBGameMode.generated.h"
 
+UENUM(BlueprintType)
+enum EnemyStatus { 
+	PATROLLING UMETA(DisplayName = "Patrolling"),
+	ATTACKING UMETA(DisplayName = "Attacking")
+};
+
 /**
  * 
  */
@@ -14,15 +20,18 @@ class GLBPAINTBALL_API APBGameMode : public AGameMode
 {
 	GENERATED_UCLASS_BODY()
 
-	virtual void Tick(float DeltaSeconds) override;
+	void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Energy)
-	float DecayRate;
+	UFUNCTION(BlueprintCallable, Category = Enemies)
+	EnemyStatus GetEnemyStatus() const;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Energy)
-    float MinimumEnergy;
+	UFUNCTION(BlueprintCallable, Category = Enemies)
+	void SetEnemyStatus(EnemyStatus NewStatus);
 
-	bool _settedHUD;
+protected:
+
+	EnemyStatus GEnemyStatus;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
 	UPBHUDView * HUDView;
 
@@ -31,6 +40,4 @@ class GLBPAINTBALL_API APBGameMode : public AGameMode
 
 	UFUNCTION(BlueprintImplementableEvent, Category = Energy)
 	void OnCreateHUDView();
-
-	virtual void BeginPlay() override;
 };
