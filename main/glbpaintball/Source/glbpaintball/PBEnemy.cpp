@@ -57,6 +57,11 @@ float APBEnemy::GetPatrolRadius() const
 	return PatrolRadius;
 }
 
+float APBEnemy::GetAttackRange() const
+{
+	return AttackRange;
+}
+
 const FVector & APBEnemy::GetInitialLocation() const
 {
 	return InitialLocation;
@@ -72,7 +77,7 @@ void APBEnemy::Attack()
 	// Aim
 	if (PlayerCharacter)
 	{
-		FaceAndRotateToPoint(PlayerCharacter->GetActorLocation(), 0 /*DeltaSeconds*/, ErrorMarginOnAim);
+		FaceAndRotateToPoint(PlayerCharacter->GetActorLocation(), 0.2f /*DeltaSeconds*/, ErrorMarginOnAim);
 	}
 
 	// Shoot
@@ -80,6 +85,11 @@ void APBEnemy::Attack()
 	{
 		Weapon->OnTriggerPress();
 	}
+}
+
+void APBEnemy::ApplyWeaponRecoil()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Enemy Recoil"));
 }
 
 void APBEnemy::FaceAndRotateToPoint(const FVector & point, float deltaSeconds, float error)
@@ -91,5 +101,10 @@ void APBEnemy::FaceAndRotateToPoint(const FVector & point, float deltaSeconds, f
 	playerRot.Pitch = GetActorRotation().Pitch;
 	playerRot.Roll = GetActorRotation().Roll;
 	FRotator newRot = FMath::RInterpTo(GetActorRotation(), playerRot, deltaSeconds, 9);
-	SetActorRotation(newRot);
+
+	FaceRotation(newRot);
+	if (Controller)
+	{
+		Controller->SetControlRotation(newRot);
+	}
 }

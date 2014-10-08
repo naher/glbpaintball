@@ -37,7 +37,7 @@ void UPBService_EnemyBrain::TickNode(UBehaviorTreeComponent * OwnerComp, uint8 *
 
 	float Distance= FVector::Dist(Character->GetActorLocation(), Controller->GetPawn()->GetActorLocation());
 
-	if (Distance > 150.0f)
+	if (Distance > Blackboard->GetValueAsInt(BlackboardKeyID))
 	{
 		Blackboard->SetValueAsEnum(BlackboardKeyID, 0);
 	}

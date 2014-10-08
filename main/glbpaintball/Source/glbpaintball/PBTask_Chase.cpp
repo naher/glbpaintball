@@ -12,7 +12,7 @@ UPBTask_Chase::UPBTask_Chase(const class FPostConstructInitializeProperties& PCI
 
 }
 
-EBTNodeResult::Type UPBTask_Chase::ExecuteTask(class UBehaviorTreeComponent* OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UPBTask_Chase::ExecuteTask(UBehaviorTreeComponent* OwnerComp, uint8* NodeMemory)
 {
 	ACharacter * PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	AAIController * Controller = Cast<AAIController>(OwnerComp->GetOwner());
