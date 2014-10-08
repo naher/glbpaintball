@@ -54,6 +54,9 @@ class GLBPAINTBALL_API APBWeapon : public AActor
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void SetWeaponHolder(AActor * Holder);
 
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	UTexture2D * GetIcon() const;
+
 protected:
 	virtual void Fire();
 
@@ -92,6 +95,9 @@ protected:
 	/** true if this weapon can fire several bullets on a single click */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 	bool isAutomatic;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	UTexture2D * IconImage;
 
 	AActor * WeaponHolder;
 

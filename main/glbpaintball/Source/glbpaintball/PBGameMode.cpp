@@ -19,15 +19,26 @@ APBGameMode::APBGameMode(const class FPostConstructInitializeProperties& PCIP)
 
 	// use our HUD
 	HUDClass = APBHUD::StaticClass();
+	_settedHUD = false;
 
 	DecayRate = 0.01f;
 	MinimumEnergy = 2;
 }
 
+void APBGameMode::BeginPlay()
+{
+	// Get Main Character.
+	myCharacter = Cast<APBCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	// Create HUDView in BP.
+	OnCreateHUDView();
+
+	// Register the PBEventController into Character.
+	myCharacter->registerEventController(HUDView);
+}
+
 void APBGameMode::Tick(float DeltaSeconds)
 {
-	APBCharacter * myCharacter = Cast<APBCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
-
 	if (myCharacter != NULL)
 	{
 	if (myCharacter->IsInMovement() && myCharacter->GetEnergyLevel() > MinimumEnergy)
@@ -36,4 +47,6 @@ void APBGameMode::Tick(float DeltaSeconds)
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "Reduce Speed");
 	 }
 	}
+
+	
 }

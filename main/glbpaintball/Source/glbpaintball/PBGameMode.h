@@ -2,6 +2,8 @@
 
 #pragma once
 #include "GameFramework/GameMode.h"
+#include "PBHUDView.h"
+#include "PBCharacter.h"
 #include "PBGameMode.generated.h"
 
 /**
@@ -19,5 +21,16 @@ class GLBPAINTBALL_API APBGameMode : public AGameMode
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Energy)
     float MinimumEnergy;
-		
+
+	bool _settedHUD;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	UPBHUDView * HUDView;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	APBCharacter * myCharacter;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Energy)
+	void OnCreateHUDView();
+
+	virtual void BeginPlay() override;
 };

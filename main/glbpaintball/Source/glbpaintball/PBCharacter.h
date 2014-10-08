@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "PBEventController.h"
 #include "GameFramework/Character.h"
 #include "PBCharacter.generated.h"
 
@@ -82,7 +83,11 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter
 	UFUNCTION(BlueprintCallable, Category = Energy)
 	void ApplyDamage(float damage);
 
+	void registerEventController(IPBEventController * controller);
+
 protected:
+
+	IPBEventController * EventController;
 
 	bool bIsFirstPersonCamera;
 

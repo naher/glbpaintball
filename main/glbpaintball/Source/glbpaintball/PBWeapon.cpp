@@ -94,6 +94,11 @@ void APBWeapon::SetWeaponHolder(AActor * Holder)
 	WeaponHolder = Holder;
 }
 
+UTexture2D * APBWeapon::GetIcon() const
+{
+	return IconImage;
+}
+
 void APBWeapon::Fire()
 {
 	if (Ammo != 0)
