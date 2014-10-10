@@ -33,7 +33,7 @@ APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 
 	// Create the root component (collision)
 	BaseCollisionComponent = PCIP.CreateDefaultSubobject<USphereComponent>(this, TEXT("BaseSphereComponent"));
-	BaseCollisionComponent->AttachTo(RootComponent);
+	BaseCollisionComponent->AttachTo(CapsuleComponent);
 	BaseCollisionComponent->SetSphereRadius(200.f);
 	// Create a CameraComponent 
 	FirstPersonCameraComponent = PCIP.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FirstPersonCamera"));
