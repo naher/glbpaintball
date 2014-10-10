@@ -225,6 +225,7 @@ void APBCharacter::OnFireStart()
 	{
 
 		ActiveWeapon->OnTriggerPress();
+		EventController->setAmmo(ActiveWeapon->GetAmmo());
 	}
 }
 
@@ -287,6 +288,9 @@ void APBCharacter::EquipWeapon(APBWeapon * Weapon)
 	ActiveWeapon = Weapon;
 	ActiveWeapon->OnEquip(this);
 
+	EventController->setWeaponIcon(ActiveWeapon->GetIcon());
+	EventController->setMaxAmmo(ActiveWeapon->GetMaxAmmo());
+	EventController->setAmmo(ActiveWeapon->GetAmmo());
 }
 
 void APBCharacter::UnEquipWeapon()
@@ -295,6 +299,8 @@ void APBCharacter::UnEquipWeapon()
 	{
 		ActiveWeapon->OnUnEquip();
 		ActiveWeapon = nullptr;
+
+		EventController->releaseWeapon();
 	}
 }
 
@@ -395,6 +401,11 @@ void APBCharacter::RechargeEnergy(float Energy)
 	{
 		EnergyLevel = MaxEnergyLevel;
 	}
+}
+
+void APBCharacter::registerEventController(IPBEventController * controller)
+{
+	EventController = controller;
 }
 
 void APBCharacter::SetOnHitEffectsManager(APBOnHitEffectsManager * Manager)

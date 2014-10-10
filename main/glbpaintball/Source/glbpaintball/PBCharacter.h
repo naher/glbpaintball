@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "PBEventController.h"
 #include "PBWeaponHolder.h"
 #include "GameFramework/Character.h"
 #include "PBCharacter.generated.h"
@@ -130,7 +131,11 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter, public IPBWeaponHolder
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	virtual void ApplyWeaponRecoil() override;
 
+	void registerEventController(IPBEventController * controller);
+
 protected:
+
+	IPBEventController * EventController;
 
 	bool bIsFirstPersonCamera;
 
