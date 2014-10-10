@@ -10,11 +10,17 @@
  * 
  */
 UCLASS()
-class GLBPAINTBALL_API APBAutomaticDoor : public AActor, public IPBInteractuable
+class GLBPAINTBALL_API APBAutomaticDoor : public APBInteractuable
 {
 	GENERATED_UCLASS_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AutomaticDoor)
+	float OpenDistance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AutomaticDoor)
+	FVector OriginalLocation;
+
 	UFUNCTION(BlueprintCallable, Category = Interactuable)
 	virtual void SetEnabled(bool enable) override;
 
@@ -22,7 +28,12 @@ public:
 	bool IsEnabled();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = AutomaticDoor)
-	void Open();
+	void OpenDoor();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = AutomaticDoor)
+	void CloseDoor();
+
+	virtual void BeginPlay() override;
 
 protected:
 	
@@ -31,6 +42,10 @@ protected:
 	// Static mesh of the door
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = AutomaticDoor)
 	TSubobjectPtr<UStaticMeshComponent> DoorMesh;
+
+	// Collision component to be used as root component
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Objective)
+	TSubobjectPtr<UBoxComponent> BaseCollisionComponent;
 
 	/** called upon the plataform generate damage */
 	UFUNCTION()

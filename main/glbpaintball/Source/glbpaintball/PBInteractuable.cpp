@@ -4,12 +4,12 @@
 #include "PBInteractuable.h"
 
 
-UPBInteractuable::UPBInteractuable(const class FPostConstructInitializeProperties& PCIP)
+APBInteractuable::APBInteractuable(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
 
 }
 
-void IPBInteractuable::SetEnabled(bool enable)
+void APBInteractuable::SetEnabled(bool enable)
 {
 }

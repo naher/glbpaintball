@@ -205,6 +205,11 @@ protected:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	TSubobjectPtr<USkeletalMeshComponent> FirstPersonMesh;
+
+
+	// Collision component to be used as root component
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Mesh)
+	TSubobjectPtr<USphereComponent> BaseCollisionComponent;
 	
 	/** default inventory list */
 	UPROPERTY(EditDefaultsOnly, Category = Inventory)
@@ -233,6 +238,10 @@ protected:
 	//handles strafing
 	UFUNCTION()
 	void MoveRight(float Val);
+
+	//Check Objects to interact
+	UFUNCTION()
+	void Interact();
 
 	//Update the speed o the Movement Animation
 	UFUNCTION()

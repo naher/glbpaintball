@@ -2,6 +2,7 @@
 
 #include "glbpaintball.h"
 #include "PBWeapon.h"
+#include "PBButton.h"
 #include "PBOnHitEffectsManager.h"
 #include "PBCharacter.h"
 
@@ -30,6 +31,10 @@ APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	// Start game in first person mode
 	bIsFirstPersonCamera = true;
 
+	// Create the root component (collision)
+	BaseCollisionComponent = PCIP.CreateDefaultSubobject<USphereComponent>(this, TEXT("BaseSphereComponent"));
+	BaseCollisionComponent->AttachTo(RootComponent);
+	BaseCollisionComponent->SetSphereRadius(200.f);
 	// Create a CameraComponent 
 	FirstPersonCameraComponent = PCIP.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->AttachParent = CapsuleComponent;
@@ -45,8 +50,10 @@ APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	FirstPersonMesh->CastShadow = false;
 
 	// everyone but the owner can see the regular body mesh
+
 	Mesh->SetOwnerNoSee(true);
 
+	// Attach static mesh component to root component
 	ActiveWeapon = nullptr;
 }
 
@@ -82,6 +89,7 @@ void APBCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompone
 	InputComponent->BindAction("Fire", IE_Released, this, &APBCharacter::OnFireEnd);
 	InputComponent->BindAction("Run", IE_Pressed, this, &APBCharacter::OnRunStart);
 	InputComponent->BindAction("Run", IE_Released, this, &APBCharacter::OnRunEnd);
+	InputComponent->BindAction("Interact", IE_Pressed, this, &APBCharacter::Interact);
 }
 
 float APBCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
@@ -340,7 +348,7 @@ void APBCharacter::Tick(float DeltaSeconds)
 
 	UpdateAnimationMovementRate(AnimationSpeedRate);
 	
-	if (MovementStatus == ESM_Walking)
+	/*if (MovementStatus == ESM_Walking)
 	  GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Walking"));
     
 	else if (MovementStatus == ESM_Running)
@@ -350,7 +358,7 @@ void APBCharacter::Tick(float DeltaSeconds)
 	   GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Jumping"));
 
 	else 
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Unknown"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Unknown"));*/
 }
 
 bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
@@ -403,4 +411,22 @@ void APBCharacter::OnRunStart()
 void APBCharacter::OnRunEnd()
 {
 	SetMovementStatus(ESM_Walking);
+}
+
+void APBCharacter::Interact()
+{
+	TArray<AActor*> collectedActors;
+	if (FirstPersonMesh)
+	{
+	FirstPersonMesh->GetOverlappingActors(collectedActors);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(collectedActors.Num()));
+	for (int32 iCollected = 0; iCollected < collectedActors.Num(); iCollected++)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Pusshing"));
+		APBButton * const button = Cast<APBButton>(collectedActors[iCollected]);
+
+		if (button)
+			button->Push();
+	}
+   }
 }

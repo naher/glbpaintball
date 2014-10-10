@@ -1,20 +1,17 @@
 
 
 #pragma once
+#include "GameFramework/Actor.h"
 #include "PBInteractuable.generated.h"
 
 /**
 *
 */
-UINTERFACE(MinimalAPI)
-class UPBInteractuable : public UInterface
+UCLASS(abstract)
+class APBInteractuable : public AActor
 {
-	GENERATED_UINTERFACE_BODY()
-};
+	GENERATED_UCLASS_BODY()
 
-class IPBInteractuable
-{
-	GENERATED_IINTERFACE_BODY()
 public:
 	virtual void SetEnabled(bool enable);
 

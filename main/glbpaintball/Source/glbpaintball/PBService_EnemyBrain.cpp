@@ -19,12 +19,13 @@ void UPBService_EnemyBrain::InitializeFromAsset(UBehaviorTree * Asset)
 {
 	Super::InitializeFromAsset(Asset);
 
-	Character = Cast<APBCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void UPBService_EnemyBrain::TickNode(UBehaviorTreeComponent * OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
 
+	Character = Cast<APBCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	
 	UBlackboardComponent * Blackboard = OwnerComp->GetBlackboardComponent();
 
 	uint8 BlackboardKeyID = Blackboard->GetKeyID("Status");
