@@ -416,9 +416,9 @@ void APBCharacter::OnRunEnd()
 void APBCharacter::Interact()
 {
 	TArray<AActor*> collectedActors;
-	if (FirstPersonMesh)
+	if (BaseCollisionComponent)
 	{
-	FirstPersonMesh->GetOverlappingActors(collectedActors);
+	BaseCollisionComponent->GetOverlappingActors(collectedActors);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(collectedActors.Num()));
 	for (int32 iCollected = 0; iCollected < collectedActors.Num(); iCollected++)
 	{
@@ -428,5 +428,5 @@ void APBCharacter::Interact()
 		if (button)
 			button->Push();
 	}
-   }
+}
 }
