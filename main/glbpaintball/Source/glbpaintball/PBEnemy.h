@@ -59,6 +59,10 @@ protected:
 	/** Health, reduced linearly with damage. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
 	float Health;
+
+	/** Maximum Health */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
+	float MaxHealth;
 	
 	/** Set the view to the character face **/
 	UFUNCTION()

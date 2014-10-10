@@ -9,8 +9,9 @@
 APBEnemy::APBEnemy(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-	// Default health value
+	// Default health values
 	Health = 1.0f;
+	MaxHealth = Health;
 }
 
 void APBEnemy::BeginPlay()
@@ -31,6 +32,12 @@ void APBEnemy::BeginPlay()
 		Weapon->SetAmmo(-1);
 		Weapon->SetFiringSpeed(2);
 		Weapon->SetTimeOnCooldown(1);
+	}
+
+	// Avoid division by 0
+	if (MaxHealth == 0.0f)
+	{
+		MaxHealth = 1.0f;
 	}
 }
 
