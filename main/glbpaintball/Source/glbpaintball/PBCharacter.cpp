@@ -42,6 +42,10 @@ APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	// Position the camera a bit above the eyes
 	FirstPersonCameraComponent->RelativeLocation = FVector(0, 0, 50.0f + BaseEyeHeight);
 
+	// Setup Motion Blur
+	FirstPersonCameraComponent->PostProcessSettings.MotionBlurAmount = 0.0f;
+	FirstPersonCameraComponent->PostProcessSettings.MotionBlurMax = 0.8f;
+
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	FirstPersonMesh = PCIP.CreateDefaultSubobject<USkeletalMeshComponent>(this, TEXT("FirstPersonMesh"));
 	FirstPersonMesh->SetOnlyOwnerSee(true);         // only the owning player will see this mesh
@@ -417,11 +421,17 @@ void APBCharacter::OnRunStart()
 {
 	if (EnergyLevel > MinEnergyLevel)
   	 SetMovementStatus(ESM_Running);
+
+	// Enable Motion Blur
+	FirstPersonCameraComponent->PostProcessSettings.MotionBlurAmount = 0.8f;
 }
 
 void APBCharacter::OnRunEnd()
 {
 	SetMovementStatus(ESM_Walking);
+
+	// Disable Motion Blur
+	FirstPersonCameraComponent->PostProcessSettings.MotionBlurAmount = 0.0f;
 }
 
 void APBCharacter::Interact()
@@ -429,15 +439,15 @@ void APBCharacter::Interact()
 	TArray<AActor*> collectedActors;
 	if (BaseCollisionComponent)
 	{
-	BaseCollisionComponent->GetOverlappingActors(collectedActors);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(collectedActors.Num()));
-	for (int32 iCollected = 0; iCollected < collectedActors.Num(); iCollected++)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Pusshing"));
-		APBButton * const button = Cast<APBButton>(collectedActors[iCollected]);
+		BaseCollisionComponent->GetOverlappingActors(collectedActors);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(collectedActors.Num()));
+		for (int32 iCollected = 0; iCollected < collectedActors.Num(); iCollected++)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Pusshing"));
+			APBButton * const button = Cast<APBButton>(collectedActors[iCollected]);
 
-		if (button)
-			button->Push();
+			if (button)
+				button->Push();
+		}
 	}
-}
 }
