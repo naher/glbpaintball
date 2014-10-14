@@ -105,7 +105,6 @@ void APBEnemy::FaceAndRotateToPoint(const FVector & point, float deltaSeconds, f
 	FBox AimBox(point - ErrorVector, point + ErrorVector);
 
 	FRotator playerRot = FRotationMatrix::MakeFromX(FMath::RandPointInBox(AimBox) - GetActorLocation()).Rotator();
-	playerRot.Pitch = GetActorRotation().Pitch;
 	playerRot.Roll = GetActorRotation().Roll;
 	FRotator newRot = FMath::RInterpTo(GetActorRotation(), playerRot, deltaSeconds, 9);
 
