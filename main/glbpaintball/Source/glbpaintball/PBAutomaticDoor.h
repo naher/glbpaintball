@@ -21,11 +21,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AutomaticDoor)
 	FVector OriginalLocation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AutomaticDoor)
+	FLinearColor LightColor;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = AutomaticDoor)
+	TSubobjectPtr<UPointLightComponent> PointLightA;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = AutomaticDoor)
+	TSubobjectPtr<UPointLightComponent> PointLightB;
+
 	UFUNCTION(BlueprintCallable, Category = Interactuable)
 	virtual void SetEnabled(bool enable) override;
 
 	UFUNCTION(BlueprintCallable, Category = Interactuable)
 	bool IsEnabled();
+
+	UFUNCTION(BlueprintCallable, Category = Interactuable)
+	void UpdateLightColor();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = AutomaticDoor)
 	void OpenDoor();

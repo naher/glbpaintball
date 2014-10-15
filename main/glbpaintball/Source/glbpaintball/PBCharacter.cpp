@@ -10,20 +10,20 @@ APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
 	/** Initial values for Energy and speed Variables*/
-	EnergyLevel = 1000.0f;
+	EnergyLevel = 100.0f;
 	NormalSpeedEnergy = EnergyLevel;
-	SpeedFactorWalk = 0.95f;
+	SpeedFactorWalk = 950.f;
 	SpeedFactor = SpeedFactorWalk;
-	SpeedFactorRun = 1.35f;
-	BaseSpeed = 90.0f;
+	SpeedFactorRun = 1350.f;
+	BaseSpeed = 900.0f;
 	Health = 100.0f;
 
-	MaxEnergyLevel = 2000;
-	MinEnergyLevel = 150;
+	MaxEnergyLevel = 100;
+	MinEnergyLevel = 20;
 
-	EnergyDecayRateJump = 50;
-	EnergyDecayRateWalk = 0.01;
-	EnergyDecayRateRun = 0.025;
+	EnergyDecayRateJump = 5;
+	EnergyDecayRateWalk = 0.001;
+	EnergyDecayRateRun = 0.0025;
 	EnergyDecayRate = EnergyDecayRateWalk;
 
 	SetMovementStatus(ESM_Walking);
@@ -349,7 +349,7 @@ void APBCharacter::Tick(float DeltaSeconds)
 	float CurrentEnergy = IsRunning() ? EnergyLevel :NormalSpeedEnergy;
 
 	CharacterMovement->MaxWalkSpeed = SpeedFactor * CurrentEnergy + BaseSpeed;
-	AnimationSpeedRate = CurrentEnergy / 1000;
+	AnimationSpeedRate = CurrentEnergy / 100;
 
 	if (IsInMovement() && EnergyLevel > MinEnergyLevel && IsRunning())
 	{
@@ -369,6 +369,9 @@ void APBCharacter::Tick(float DeltaSeconds)
 
 	else 
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Unknown"));*/
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(EnergyLevel));
+
 }
 
 bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
