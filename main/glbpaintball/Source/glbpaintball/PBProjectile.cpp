@@ -52,4 +52,5 @@ void APBProjectile::OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FV
 			OtherActor->TakeDamage(Damage, FDamageEvent(), nullptr, this);
 		}
 	}
+	Destroy();
 }
