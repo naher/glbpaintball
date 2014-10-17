@@ -352,27 +352,15 @@ void APBCharacter::Tick(float DeltaSeconds)
 
 	CharacterMovement->MaxWalkSpeed = SpeedFactor * CurrentEnergy + BaseSpeed;
 	AnimationSpeedRate = CurrentEnergy / 100;
-
+	
 	if (IsInMovement() && EnergyLevel > MinEnergyLevel && IsRunning())
 	{
 		SetEnergyLevel(FMath::FInterpTo(EnergyLevel, MinEnergyLevel, DeltaSeconds, EnergyDecayRate));
 	}
 
 	UpdateAnimationMovementRate(AnimationSpeedRate);
-	
-	/*if (MovementStatus == ESM_Walking)
-	  GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Walking"));
-    
-	else if (MovementStatus == ESM_Running)
-	   GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Running"));
 
-	else if (MovementStatus == ESM_Jumping)
-	   GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Jumping"));
-
-	else 
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Unknown"));*/
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::SanitizeFloat(CharacterMovement->MaxWalkSpeed));
+	EventController->setBarEnergy(EnergyLevel/100);
 
 }
 
@@ -383,6 +371,7 @@ bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
 		if (Inventory.Num() > Weapon->GetSlotNumber() && !Inventory[Weapon->GetSlotNumber()])
 		{
 			Inventory.Insert(Weapon, Weapon->GetSlotNumber());
+			EventController->setWeaponInventary(Weapon->GetIcon(), Weapon->GetSlotNumber());
 			return true;
 		}
 	}

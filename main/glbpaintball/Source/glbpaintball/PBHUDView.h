@@ -27,13 +27,21 @@ class GLBPAINTBALL_API UPBHUDView : public UUserWidget, public IPBEventControlle
 	void OnSetHealth(int32 health);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = Events)
+	void OnSetEnergy(float _energy);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = Events)
 	void OnReleaseWeapon();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = Events)
+	void OnAddWeaponInventary( const UTexture2D * icon, int32 key);
 
 public:
 	virtual void setAmmo(int32 amountAmmo) override;
 	virtual void setWeaponIcon(const UTexture2D * icon) override;
 	virtual void setMaxAmmo(int32 max_ammo) override;
 	virtual void setHealth(float health) override;
+	virtual void setBarEnergy(float benergy) override;
 	virtual void releaseWeapon() override;
+	virtual void setWeaponInventary(const UTexture2D *icon, int32 key);
 };
  
