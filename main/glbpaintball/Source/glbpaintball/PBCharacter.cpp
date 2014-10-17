@@ -361,7 +361,6 @@ void APBCharacter::Tick(float DeltaSeconds)
 	UpdateAnimationMovementRate(AnimationSpeedRate);
 
 	EventController->setBarEnergy(EnergyLevel/100);
-
 }
 
 bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
