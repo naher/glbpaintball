@@ -246,6 +246,14 @@ void APBCharacter::OnFireEnd()
 	}
 }
 
+void APBCharacter::OnPickUpAmmo()
+{
+	if (ActiveWeapon)
+	{
+		EventController->setAmmo(ActiveWeapon->GetAmmo());
+	}
+}
+
 void APBCharacter::OnCameraToggle()
 {
 	// Set the new position of the camera

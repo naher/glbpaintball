@@ -30,6 +30,7 @@ bool APBPickUpAmmo::OnPickedUp_Implementation(APBCharacter * Character)
 
 		if (Weapon && (Weapon->GetAmmo() < Weapon->GetMaxAmmo())) {
 			Weapon->AddAmmo(AmmoLoad);
+			Character->OnPickUpAmmo();
 			return true;
 		}
 	}

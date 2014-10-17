@@ -80,6 +80,8 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter, public IPBWeaponHolder
 	UFUNCTION()
 	void OnFireEnd();
 
+	void OnPickUpAmmo();
+
 	UFUNCTION()
 	void SetMovementStatus(int32 status);
 
