@@ -47,8 +47,7 @@ void APBOnHitEffectsManager::NotifyHit()
 	if (!Character || !PlayerCamera)
 		return;
 
-	float EnergyPercentage = (Character->GetEnergyLevel() - Character->GetMinEnergyLevel())
-							/ (Character->GetMaxEnergyLevel() - Character->GetMinEnergyLevel());
+	float EnergyPercentage = Character->GetEnergyLevel() / Character->GetMaxEnergyLevel();
 
 	PlayerCamera->PostProcessSettings.VignetteIntensity = EnergyPercentage < 0.2f ? 1.0f : 0.0f;
 

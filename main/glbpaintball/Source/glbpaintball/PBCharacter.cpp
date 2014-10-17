@@ -10,24 +10,7 @@
 APBCharacter::APBCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-	/** Initial values for Energy and speed Variables*/
-	EnergyLevel = 100.0f;
-	NormalSpeedEnergy = EnergyLevel;
-	SpeedFactorWalk = 950.f;
-	SpeedFactor = SpeedFactorWalk;
-	SpeedFactorRun = 1350.f;
-	BaseSpeed = 900.0f;
-	Health = 100.0f;
-
-	MaxEnergyLevel = 100;
-	MinEnergyLevel = 20;
-
-	EnergyDecayRateJump = 5;
-	EnergyDecayRateWalk = 0.001;
-	EnergyDecayRateRun = 0.0025;
-	EnergyDecayRate = EnergyDecayRateWalk;
-
-	SetMovementStatus(ESM_Walking);
+	
 	
 	// Start game in first person mode
 	bIsFirstPersonCamera = true;
@@ -80,6 +63,25 @@ void APBCharacter::BeginPlay()
 	}
 
 	GameMode = ((APBGameMode*)GetWorld()->GetAuthGameMode());
+
+	/** Initial values for Energy and speed Variables*/
+	EnergyLevel = 100.0f;
+	NormalSpeedEnergy = EnergyLevel;
+	SpeedFactorWalk = 9.5f;
+	SpeedFactor = SpeedFactorWalk;
+	SpeedFactorRun = 16.5f;
+	BaseSpeed = 90.0f;
+	Health = 100.0f;
+
+	MaxEnergyLevel = 100;
+	MinEnergyLevel = 50;
+
+	EnergyDecayRateJump = 5;
+	EnergyDecayRateWalk = 0.1;
+	EnergyDecayRateRun = 0.15;
+	EnergyDecayRate = EnergyDecayRateWalk;
+
+	SetMovementStatus(ESM_Walking);
 }
 
 void APBCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -104,9 +106,9 @@ float APBCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& Da
 {
 	EnergyLevel -= DamageAmount;
 
-	if (EnergyLevel < MinEnergyLevel)
+	if (EnergyLevel < 0.0f)
 	{
-		EnergyLevel = MinEnergyLevel;
+		EnergyLevel = 0.0f;
 	}
 
 	if (OnHitEffectsManager)
@@ -320,12 +322,12 @@ void APBCharacter::SetMovementStatus(int32 status)
 	switch (status)
 	{
 	    case ESM_Walking:
-		  //SpeedFactor = SpeedFactorWalk;
+		  SpeedFactor = SpeedFactorWalk;
 		  // EnergyDecayRate = EnergyDecayRateWalk;
 		   break;
     
 		case ESM_Running:
-			//SpeedFactor = SpeedFactorRun;
+			SpeedFactor = SpeedFactorRun;
 			EnergyDecayRate = EnergyDecayRateRun;
 			break;
 
@@ -360,19 +362,7 @@ void APBCharacter::Tick(float DeltaSeconds)
 	}
 
 	UpdateAnimationMovementRate(AnimationSpeedRate);
-	
-	/*if (MovementStatus == ESM_Walking)
-	  GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Walking"));
-    
-	else if (MovementStatus == ESM_Running)
-	   GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Running"));
 
-	else if (MovementStatus == ESM_Jumping)
-	   GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Jumping"));
-
-	else 
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Unknown"));*/
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(EnergyLevel));
 	EventController->setBarEnergy(EnergyLevel/100);
 	GameMode->setBarEnergy(EnergyLevel);
 }
