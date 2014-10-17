@@ -17,19 +17,24 @@ APBAutomaticDoor::APBAutomaticDoor(const class FPostConstructInitializePropertie
 	PointLightA = PCIP.CreateDefaultSubobject<UPointLightComponent>(this, TEXT("PointLightA"));
 	PointLightB = PCIP.CreateDefaultSubobject<UPointLightComponent>(this, TEXT("PointLightB"));
 
-	PointLightA->AttachTo(DoorMesh);
-	PointLightB->AttachTo(DoorMesh);
-
 	BaseCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APBAutomaticDoor::OnOverlap);
 	BaseCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &APBAutomaticDoor::OnEndOverlap);
 	// Attach static mesh component to root component
 	DoorMesh->AttachTo(RootComponent);
+
+	PointLightA->AttachTo(DoorMesh);
+	PointLightB->AttachTo(DoorMesh);
+
+	PointLightA->bAbsoluteLocation = false;
+	PointLightB->bAbsoluteLocation = false;
+
 	Enabled = false;
 }
 
 void APBAutomaticDoor::BeginPlay()
 {
 	OriginalLocation = DoorMesh->GetComponentLocation();
+
 	UpdateLightColor();
 }
 
