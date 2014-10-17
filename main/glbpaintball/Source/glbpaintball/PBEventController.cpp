@@ -22,5 +22,11 @@ void IPBEventController::setMaxAmmo(int32 max_ammo)
 void IPBEventController::setHealth(float health)
 {}
 
+void IPBEventController::setBarEnergy(float benergy)
+{}
+
+void IPBEventController::setWeaponInventary(const UTexture2D *icon, int32 key)
+{}
+
 void IPBEventController::releaseWeapon()
 {}

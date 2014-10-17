@@ -17,5 +17,7 @@ class IPBEventController
 	virtual void setMaxAmmo(int32 max_ammo);
 	virtual void setHealth(float health);
 	virtual void releaseWeapon();
+	virtual void setBarEnergy(float benergy);
+	virtual void setWeaponInventary(const UTexture2D *icon, int32 key);
 };
 

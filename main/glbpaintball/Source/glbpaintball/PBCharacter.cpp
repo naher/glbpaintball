@@ -350,7 +350,7 @@ void APBCharacter::Tick(float DeltaSeconds)
 
 	CharacterMovement->MaxWalkSpeed = SpeedFactor * CurrentEnergy + BaseSpeed;
 	AnimationSpeedRate = CurrentEnergy / 100;
-
+	
 	if (IsInMovement() && EnergyLevel > MinEnergyLevel && IsRunning())
 	{
 		SetEnergyLevel(FMath::FInterpTo(EnergyLevel, MinEnergyLevel, DeltaSeconds, EnergyDecayRate));
@@ -369,9 +369,8 @@ void APBCharacter::Tick(float DeltaSeconds)
 
 	else 
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Unknown"));*/
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(EnergyLevel));
-
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(EnergyLevel));
+	EventController->setBarEnergy(EnergyLevel/100);
 }
 
 bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
@@ -381,6 +380,7 @@ bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)
 		if (Inventory.Num() > Weapon->GetSlotNumber() && !Inventory[Weapon->GetSlotNumber()])
 		{
 			Inventory.Insert(Weapon, Weapon->GetSlotNumber());
+			EventController->setWeaponInventary(Weapon->GetIcon(), Weapon->GetSlotNumber());
 			return true;
 		}
 	}
