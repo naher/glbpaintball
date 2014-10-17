@@ -135,7 +135,9 @@ class GLBPAINTBALL_API APBCharacter : public ACharacter, public IPBWeaponHolder
 
 protected:
 
+	// TODO: Clean this
 	IPBEventController * EventController;
+	IPBEventController * GameMode;
 
 	bool bIsFirstPersonCamera;
 

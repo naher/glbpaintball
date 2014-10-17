@@ -45,3 +45,11 @@ EnemyStatus APBGameMode::GetEnemyStatus() const
 {
 	return GEnemyStatus;
 }
+
+void APBGameMode::setBarEnergy(float benergy)
+{
+	if (benergy == 0)
+	{
+		OnGameOver();
+	}
+}

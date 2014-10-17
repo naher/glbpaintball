@@ -51,6 +51,12 @@ void APBOnHitEffectsManager::NotifyHit()
 							/ (Character->GetMaxEnergyLevel() - Character->GetMinEnergyLevel());
 
 	PlayerCamera->PostProcessSettings.VignetteIntensity = EnergyPercentage < 0.2f ? 1.0f : 0.0f;
+
+	if (EnergyPercentage == 0)
+	{
+		PlayerCamera->PostProcessSettings.bOverride_FilmSaturation = true;
+		PlayerCamera->PostProcessSettings.FilmSaturation = 0.0f;
+	}
 }
 
 void APBOnHitEffectsManager::SetScreenToDefaultScale()

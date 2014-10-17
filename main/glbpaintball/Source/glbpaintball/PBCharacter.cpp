@@ -3,6 +3,7 @@
 #include "glbpaintball.h"
 #include "PBWeapon.h"
 #include "PBButton.h"
+#include "PBGameMode.h"
 #include "PBOnHitEffectsManager.h"
 #include "PBCharacter.h"
 
@@ -77,6 +78,8 @@ void APBCharacter::BeginPlay()
 		APBWeapon* NewWeapon = GetWorld()->SpawnActor<APBWeapon>(WeaponClass, SpawnInfo);
 		Inventory.Insert(NewWeapon, NewWeapon->GetSlotNumber());
 	}
+
+	GameMode = ((APBGameMode*)GetWorld()->GetAuthGameMode());
 }
 
 void APBCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -371,6 +374,7 @@ void APBCharacter::Tick(float DeltaSeconds)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Unknown"));*/
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(EnergyLevel));
 	EventController->setBarEnergy(EnergyLevel/100);
+	GameMode->setBarEnergy(EnergyLevel);
 }
 
 bool APBCharacter::AddWeaponToInventory(APBWeapon * Weapon)

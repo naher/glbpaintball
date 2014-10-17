@@ -4,6 +4,7 @@
 #include "GameFramework/GameMode.h"
 #include "PBHUDView.h"
 #include "PBCharacter.h"
+#include "PBEventController.h"
 #include "PBGameMode.generated.h"
 
 UENUM(BlueprintType)
@@ -16,7 +17,7 @@ enum EnemyStatus {
  * 
  */
 UCLASS()
-class GLBPAINTBALL_API APBGameMode : public AGameMode
+class GLBPAINTBALL_API APBGameMode : public AGameMode, public IPBEventController
 {
 	GENERATED_UCLASS_BODY()
 
@@ -40,4 +41,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = Energy)
 	void OnCreateHUDView();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = GameOver)
+	void OnGameOver();
+
+	void setBarEnergy(float benergy) override;
 };
