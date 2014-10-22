@@ -394,7 +394,7 @@ APBWeapon * APBCharacter::GetWeapon(UClass * WeaponClass) const
 {
 	for (auto Weapon : Inventory)
 	{
-		if (Weapon->GetClass() == WeaponClass)
+		if (Weapon && Weapon->GetClass() == WeaponClass)
 		{
 			return Weapon;
 		}
